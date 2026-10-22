@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tellora Teacher Portal case study · Raksha Patidar</title>
+  <meta name="description" content="How Raksha Patidar designed the Tellora Teacher Portal, where primary teachers set story tasks, read and score each child's book, and share progress.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%234b3fd8'/><text x='50' y='66' font-size='44' text-anchor='middle' fill='white' font-family='Georgia'>RP</text></svg>">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===== Icon library =====
+       One style across the site: outline, 2px stroke, round ends. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></g></symbol>
+    <symbol id="icon-linkedin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 0 0-4 0"/></g></symbol>
+    <symbol id="icon-medium" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 15V9l4 4 4-4v6"/></g></symbol>
+    <symbol id="icon-gumroad" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M15.2 10.1A3.6 3.6 0 1 0 15.6 13.5h-3.2"/></g></symbol>
+
+    <!-- Case-study icons (decorative; the titles beside them carry the meaning) -->
+    <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></g></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2.83 2.83 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></g></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/></g></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></g></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z"/><path d="M3 12l9 4.5 9-4.5M3 16.5l9 4.5 9-4.5"/></g></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 20.5l1.6-5A8.5 8.5 0 1 1 21 11.5z"/></g></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v.5M9 11h6M9 15h4"/></g></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></g></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z"/><path d="M12 6.5v13"/></g></symbol>
+    <symbol id="i-board" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M7 20l2-4M17 20l-2-4M7 8.5h6M7 11.5h4"/></g></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></g></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/></g></symbol>
+    <symbol id="i-inspect" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M8.5 11l1.8 1.8 3.2-3.6"/></g></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></g></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></g></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 18h5M10.5 21h3"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></g></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3.5l1.9 5.1 5.1 1.9-5.1 1.9L11 17.5l-1.9-5.1L4 10.5l5.1-1.9L11 3.5z"/><path d="M18.5 15.5v5M16 18h5"/></g></symbol>
+  </svg>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <nav class="container nav" aria-label="Main">
+      <a href="index.html" class="brand" aria-label="Raksha Patidar, home">
+        <span class="initials" aria-hidden="true">Raksha Patidar<span>.</span></span>
+      </a>
+
+      <div class="nav-right">
+        <ul class="nav-links" id="nav-links">
+          <li><a href="index.html#work">Work</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="https://www.linkedin.com/in/rakshapatidar/" target="_blank" rel="noopener">LinkedIn<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
+          <li><a href="mailto:ux.rakshapatidar@gmail.com">Mail<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens your email app)</span></a></li>
+        </ul>
+        <button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- Tellora Teacher Portal case study. The facts come from
+         "Tellora_Teacher_Portal_Case_Study_Content.pdf"; nothing is added.
+         It uses the same building blocks as primetrack.html (see HOW-TO-EDIT.md),
+         plus four small variants described in style.css.
+         The cover colour comes from content.js; the highlights inside the story
+         use the same lilac as every case study.
+         Type: section titles are plain <h2> (serif). Everything else takes its
+         look from a class: h4 = sub-heading, h5 = title, h6 = label.
+         Icons: <svg class="cs-icon" aria-hidden="true"><use href="#i-…"/></svg>
+         EDIT: to add a screenshot, replace a <div class="shot-placeholder" …>…</div> with
+         <img src="images/your-file.webp" alt="…" loading="lazy">, using the placeholder's
+         aria-label as the alt text. -->
+    <article class="case" id="case-study" data-project="tellora-teacher-portal" aria-labelledby="case-title">
+      <div class="container">
+
+        <a class="back-link" href="index.html#work"><svg aria-hidden="true"><use href="#arrow-left"/></svg>All work</a>
+
+        <header class="case-hero">
+          <p class="case-eyebrow">Case study · EdTech · B2B web app</p>
+          <h1 class="case-title" id="case-title">Tellora Teacher Portal: Turning children's storybooks into progress teachers can see</h1>
+          <p class="case-lede">I designed the Teacher Portal for Tellora, a storytelling app for UK primary schools. Teachers use it to set story tasks, read and score each child's book, and share progress. Names changed for confidentiality.</p>
+
+          <dl class="case-meta">
+            <div><dt class="h6">Role</dt><dd>Sole UX Designer, freelance</dd></div>
+            <div><dt class="h6">Team</dt><dd>2 founders, 2 teachers in testing</dd></div>
+            <div><dt class="h6">Timeline</dt><dd>3 weeks, September 2025</dd></div>
+            <div><dt class="h6">Platform</dt><dd>Desktop web app, mid fidelity</dd></div>
+          </dl>
+        </header>
+
+        <figure class="case-cover">
+          <div class="case-cover-frame has-image">
+            <img src="images/tellora-teacher-dashboard.webp" fetchpriority="high" alt="The Tellora teacher dashboard: A greeting for Ms Smith, cards for classes 4B and 4A, a Pending Review panel with 5 books to review and a Review Now button, a table of assignments, and a side column with Recent Activity, Notifications and Quick Actions.">
+          </div>
+        </figure>
+
+        <div class="case-body">
+
+          <!-- ===== At a glance ===== -->
+          <section class="case-section case-glance" aria-labelledby="cs-glance">
+            <h2 class="h6" id="cs-glance">At a glance</h2>
+            <div class="cs-cells">
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg>
+                <h3 class="h5">The problem</h3>
+                <p>Children were finishing storybooks, but teachers had no way to see them, mark them or follow each child's progress.</p>
+              </div>
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-pen"/></svg>
+                <h3 class="h5">What I did</h3>
+                <p>I set the requirements with the founders and designed 20+ screens. After teachers tested them, I reorganised the structure in a week.</p>
+              </div>
+              <div class="cs-cell is-tint">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg>
+                <h3 class="h5">The outcome</h3>
+                <p>A portal that scores every book with curriculum levels, not grades, and gives teachers reports to share. It was handed over for visual design.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== 01 The problem ===== -->
+          <section class="case-section" aria-labelledby="cs-problem">
+            <p class="h6 section-num" aria-hidden="true">01</p>
+            <h2 id="cs-problem">The problem</h2>
+            <h3 class="h4">Books with nowhere to go</h3>
+            <p>Tellora is sold to schools, not parents, because storytelling builds children's English. Children aged 5–12 use it to make illustrated storybooks. Younger children mostly tell their story out loud and the app records it. Older children can type it.</p>
+
+            <!-- How Tellora works: the same step boxes as the use cases below -->
+            <figure class="case-figure">
+              <ol class="flow">
+                <li>The teacher gives the class a story task <span class="t-secondary"><span class="sr-only">in the </span>Teacher Portal</span></li>
+                <li>Each child makes a storybook <span class="t-secondary"><span class="sr-only">in the </span>Student app</span></li>
+                <li class="is-key">The teacher reads it, scores it and tracks progress <span class="t-secondary"><span class="sr-only">in the </span>Teacher Portal</span></li>
+              </ol>
+              <figcaption>I designed steps 1 and 3, which happen in the Teacher Portal. The student app is <a href="tellora.html">a separate case study</a>.</figcaption>
+            </figure>
+
+            <p>But the founders had only built the student app, so every finished book stayed inside it. These two everyday use cases show the gap.</p>
+
+            <!-- Use case 1 -->
+            <div class="case-flow">
+              <div class="flow-head">
+                <p class="h6">Use case 1</p>
+                <h3 class="h5" id="sc1-title">Checking who has handed in a task</h3>
+              </div>
+              <div class="flow-row">
+                <p class="h6">Before</p>
+                <p class="flow-box is-missing">If a teacher set a story for Friday, there was no list of who had handed in a book and who hadn't.</p>
+              </div>
+              <div class="flow-row">
+                <p class="h6 t-primary" id="sc1-after">After</p>
+                <ol class="flow" aria-labelledby="sc1-after">
+                  <li>Opens Assignments</li>
+                  <li>Sees who has submitted</li>
+                  <li class="is-key">Opens a child's book</li>
+                  <li>Scores five skills and writes feedback</li>
+                </ol>
+              </div>
+              <div class="flow-result">
+                <p class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg>Result</p>
+                <p>The teacher sees at once who hasn't finished. Every submitted book is ready to read and score.</p>
+              </div>
+            </div>
+
+            <!-- Use case 2 -->
+            <div class="case-flow">
+              <div class="flow-head">
+                <p class="h6">Use case 2</p>
+                <h3 class="h5" id="sc2-title">Telling a parent how their child is doing</h3>
+              </div>
+              <div class="flow-row">
+                <p class="h6">Before</p>
+                <p class="flow-box is-missing">No reports, no record, nothing to export.</p>
+              </div>
+              <div class="flow-row">
+                <p class="h6 t-primary" id="sc2-after">After</p>
+                <ol class="flow" aria-labelledby="sc2-after">
+                  <li>Opens Students</li>
+                  <li>Picks the child</li>
+                  <li class="is-key">Sees their books scored by skill</li>
+                  <li>Exports a PDF or CSV</li>
+                </ol>
+              </div>
+              <div class="flow-result">
+                <p class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg>Result</p>
+                <p>A report for a parents' evening or the head teacher, based on the child's own books.</p>
+              </div>
+            </div>
+
+            <div class="cs-panel is-butter">
+              <h3 class="h4">What a missing teacher side cost</h3>
+              <ul class="cs-points">
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg><h4 class="h5">No evidence of learning</h4><p>Every book shows how a child speaks and writes. But teachers had no way to read it, mark it or track progress over a term.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg><h4 class="h5">No product for schools</h4><p>Schools pay for progress they can see. Without a teacher portal, Tellora couldn't be sold as a classroom tool.</p></li>
+              </ul>
+            </div>
+
+            <p class="case-callout"><strong>How might we</strong> help a busy primary teacher give story tasks, read every child's book and see how their English is growing, without turning her into a data analyst?</p>
+          </section>
+
+          <!-- ===== 02 Who I designed for ===== -->
+          <section class="case-section" aria-labelledby="cs-users">
+            <p class="h6 section-num" aria-hidden="true">02</p>
+            <h2 id="cs-users">Who I designed for</h2>
+            <p>The class teacher uses the portal every day.</p>
+
+            <div class="persona-group">
+              <h3 class="h6"><span class="t-primary">Primary user</span> · The teacher who reviews the books</h3>
+              <ul class="persona-grid cols-1">
+                <li class="persona">
+                  <div class="persona-head">
+                    <span class="persona-badge" aria-hidden="true"><svg><use href="#i-board"/></svg></span>
+                    <div class="persona-who">
+                      <h4 class="h5">Class teacher</h4>
+                      <p>Sets story tasks, reviews books and tracks each child</p>
+                      <span class="persona-tag">Persona: Ms Smith</span>
+                    </div>
+                  </div>
+                  <dl class="persona-body">
+                    <div class="persona-uses"><dt class="h6">Relied on</dt><dd><ul class="tags"><li>UK curriculum levels</li></ul></dd></div>
+                    <div class="persona-box is-needs"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-target"/></svg>Needs</dt><dd><ul class="cs-list"><li>A clear list of books waiting for review</li><li>A simple marking panel</li><li>Easy reports</li></ul></dd></div>
+                    <div class="persona-box is-pains"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg>Pain points</dt><dd><ul class="cs-list"><li>Too many books to review at once</li><li>Slow tools</li><li>Reports take effort</li></ul></dd></div>
+                  </dl>
+                </li>
+              </ul>
+              <blockquote class="case-quote is-small"><p>“I want to spend my time encouraging kids, not clicking through menus.”</p></blockquote>
+            </div>
+
+            <h3 class="h4">How my picture of the teacher changed</h3>
+            <figure class="case-figure">
+              <div class="cs-cells cols-2 is-change">
+                <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-clock"/></svg><h4 class="h5">Version 1: Saving time</h4><p>Give tasks quickly, review without wasting time and track each child.</p></div>
+                <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-book"/></svg><h4 class="h5">Version 2: Teaching literacy</h4><p>Also improve children's speaking, vocabulary, grammar, punctuation and spelling, and teach them how to tell a story.</p></div>
+              </div>
+              <figcaption>Version 1 was based on the founders' input. Version 2 came after more research and the teacher workshop.</figcaption>
+            </figure>
+          </section>
+
+          <!-- ===== 03 Constraints ===== -->
+          <section class="case-section" aria-labelledby="cs-constraints">
+            <p class="h6 section-num" aria-hidden="true">03</p>
+            <h2 id="cs-constraints">Constraints</h2>
+            <div class="cs-cells is-tint">
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-file"/></svg><h3 class="h5">From a blank page</h3><p>No teacher portal existed, so there was nothing to audit</p></div>
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-calendar"/></svg><h3 class="h5">3 weeks</h3><p>2 weeks to design and 1 week to make changes, alongside the student app</p></div>
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-layers"/></svg><h3 class="h5">Mid fidelity only</h3><p>Visual design and development came later, after I left</p></div>
+            </div>
+            <p>So I agreed the requirements with the founders first. Then I tested a clickable prototype with teachers and used one layout for every list page.</p>
+          </section>
+
+          <!-- ===== 04 Research findings ===== -->
+          <section class="case-section" aria-labelledby="cs-research">
+            <p class="h6 section-num" aria-hidden="true">04</p>
+            <h2 id="cs-research">Research findings</h2>
+            <p>I worked with the two founders to decide what to build. One of them is also a teacher.</p>
+            <div class="cs-cells">
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-chat"/></svg><h3 class="h5">Requirements workshop</h3><p>A planned session on users, key features, competitors and what success looks like after six months</p></div>
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-clipboard"/></svg><h3 class="h5">Feature list</h3><p>The founders' requests, sorted into a clear list of what teachers need</p></div>
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-user"/></svg><h3 class="h5">Persona and UX strategy</h3><p>A teacher persona, updated after testing, and principles every screen had to follow</p></div>
+            </div>
+
+            <h3 class="h4">What I found</h3>
+            <div class="cs-grid cols-2">
+              <div class="cs-card"><h4 class="h5">Reviewing is the main job</h4><p>A teacher's main task in Tellora is reading and marking children's books. Class lists and reports are there to support it.</p></div>
+              <div class="cs-card"><h4 class="h5">A book count isn't progress</h4><p>The founders wanted teachers to see each child's English improve, skill by skill, not just count finished books.</p></div>
+              <div class="cs-card"><h4 class="h5">Teachers have minutes, not hours</h4><p>Anything that needs setting up, like filters or custom views, takes time away from children.</p></div>
+              <div class="cs-card"><h4 class="h5">Teachers don't create accounts</h4><p>The school admin creates accounts for teachers and pupils, so the portal starts at the login screen.</p></div>
+            </div>
+          </section>
+
+          <!-- ===== 05 Project scope ===== -->
+          <section class="case-section" aria-labelledby="cs-scope">
+            <p class="h6 section-num" aria-hidden="true">05</p>
+            <h2 id="cs-scope">Project scope</h2>
+            <p>The first release had one goal. Every finished book had to reach a teacher.</p>
+            <div class="cs-cells">
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg>
+                <h3 class="h5">First release</h3>
+                <ul class="tags" aria-label="In the first release"><li>Login</li><li>Dashboard</li><li>Class lists</li><li>Student profiles</li><li>Assignments</li><li>Progress reports</li><li>Book review</li><li>Notifications</li></ul>
+              </div>
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-plus"/></svg>
+                <h3 class="h5">Added during the project</h3>
+                <ul class="tags" aria-label="Added during the project"><li>Help and Support</li><li>Set work and free writing</li><li>Class tasks and scores</li><li>Three types of report</li></ul>
+              </div>
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-clock"/></svg>
+                <h3 class="h5">Saved for later</h3>
+                <ul class="tags is-later" aria-label="Saved for later"><li>Google and Microsoft login</li></ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== 06 Key design decisions ===== -->
+          <section class="case-section" aria-labelledby="cs-decisions">
+            <p class="h6 section-num" aria-hidden="true">06</p>
+            <h2 id="cs-decisions">Key design decisions</h2>
+
+            <div class="case-decision">
+              <h3 class="h4"><span class="t-secondary">01</span> Start the dashboard with the work to do</h3>
+              <p><strong>The situation:</strong> Teachers open the portal between lessons, wanting to know what to do first. The founders wanted a simple dashboard that showed everything.</p>
+              <p><strong>What I designed:</strong> The dashboard is built around one panel showing the books waiting for review, with a Review Now button. Class cards sit above it. Recent activity, notifications and shortcuts sit in a side column, visible but out of the way. After testing, it needed fewer changes than any other screen.</p>
+              <figure class="case-figure is-wide">
+                <div class="frame"><img src="images/tellora-teacher-dashboard-annotated.webp" loading="lazy" decoding="async" alt="The Tellora teacher dashboard, with four numbered notes. 1. See what to review first: One panel shows the books waiting for review, with a Review Now button. 2. Jump into a class: Class cards sit above the panel, so each class is one click away. 3. Catch up without searching: Recent activity and notifications sit in a side column, visible but out of the way. 4. Shortcuts within reach: Students and Reports are one click away, without leaving the dashboard."></div>
+              </figure>
+            </div>
+
+            <div class="case-decision">
+              <h3 class="h4"><span class="t-secondary">02</span> Separate set work from free writing</h3>
+              <p><strong>The gap:</strong> Children make two kinds of book. Some answer a teacher's task, and others they make by choice, for example at home. When both are mixed together, a teacher can't tell which ones to judge against the task.</p>
+              <p><strong>What I proposed:</strong> Each child's books are split into two tabs, one for set work and one for free writing. Set work is judged against the task. Free writing shows a child's motivation and independence. Keeping them apart lets the teacher read each one for what it is.</p>
+              <figure class="case-figure is-wide">
+                <div class="frame"><img src="images/tellora-teacher-pupil-books-annotated.webp" loading="lazy" decoding="async" alt="A pupil's page in Tellora, for Amelia Clarke in class 4B. A table lists each book with its date and its scores for oracy, grammar, vocabulary, spelling and punctuation. Two numbered notes point to the tabs. 1. Check set work: Assignment Books holds books made for a task, judged against that task. 2. See free writing: My Books holds books a child makes by choice. It shows motivation and independence."></div>
+              </figure>
+            </div>
+
+            <div class="case-decision">
+              <h3 class="h4"><span class="t-secondary">03</span> Score in the curriculum's language, not grades</h3>
+              <p><strong>Where I pushed back:</strong> The feature list asked for a grade on every book, such as a score, stars or a rubric. But the founders' own notes said the scoring method still needed research. So before designing anything, I asked the founder how teachers actually mark English.</p>
+              <p><strong>What I designed:</strong> Teachers already mark English against five UK curriculum skills, each with its own levels. I used the same skills and levels to score both kinds of book. There's nothing new to learn, and reports use the same language as the school.</p>
+              <table class="case-table" role="table">
+                <caption class="sr-only">How each skill is scored</caption>
+                <thead role="rowgroup">
+                  <tr role="row"><th scope="col" role="columnheader">Skill</th><th scope="col" role="columnheader">How it's scored</th></tr>
+                </thead>
+                <tbody role="rowgroup">
+                  <tr role="row"><th scope="row" role="rowheader">Oracy (speaking)</th><td role="cell" data-label="How it's scored">Good, Developing or Needs improvement. Shows “NA” when the child typed the story instead of recording it, as there's no speech to assess</td></tr>
+                  <tr role="row"><th scope="row" role="rowheader">Grammar, Vocabulary, Spelling, Punctuation</th><td role="cell" data-label="How it's scored">Exceeds, Meets or Working towards Expectation. Spelling and punctuation show “NA” when the child recorded the story, as there's no writing to assess</td></tr>
+                </tbody>
+              </table>
+              <p>Every list of books shows a score for each skill, and class overviews show each skill as an average. A summary in the assignment report counts how many pupils are at each level. It shows which skill the class needs help with, such as punctuation. Only teachers see the scores. Children never see grades.</p>
+              <figure class="case-figure is-wide">
+                <div class="frame"><img src="images/tellora-teacher-report-summary-annotated.webp" loading="lazy" decoding="async" alt="The Summary tab of the assignment report for 4B, Fantasy Story of a Prince. One table counts pupils at each oracy level and one at each writing level. The Punctuation row is highlighted, with the note “Most pupils are working towards in punctuation.” Four numbered notes. 1. Score speaking: Recorded stories use Good, Developing or Needs improvement, and NA for typed ones. 2. Score writing: Grammar, Vocabulary, Spelling and Punctuation use Exceeds, Meets or Working towards. 3. Spot where the class needs help: Counts at each level show the class needs help with punctuation. 4. Only teachers see the scores: Scores stay in the Teacher Portal. Children never see grades."></div>
+              </figure>
+            </div>
+
+            <div class="case-decision">
+              <h3 class="h4"><span class="t-secondary">04</span> One report or three</h3>
+              <p><strong>The disagreement:</strong> I first designed one report page with filters, so teachers could build any view they needed. The founder disagreed. Teachers mainly review work and aren't technical. They want reports that are already sorted by type and kept over time, not rebuilt with filters each time.</p>
+              <p><strong>How it was resolved:</strong> Once I understood the reasoning, I agreed. Reports became three tabs, for classes, students and assignments. Each tab opens a list and a detail page, and every report can be exported as a PDF or CSV.</p>
+              <figure class="case-figure is-wide">
+                <div class="frame"><img src="images/tellora-teacher-reports-annotated.webp" loading="lazy" decoding="async" alt="Tellora's Reports page with its Class Report, Student Report and Assignment Report tabs. In front is the class report for 4B, listing each book with its scores. Four numbered notes. 1. Pick the report you need: Three tabs, for classes, students and assignments, instead of one page of filters. 2. Share it as a file: Every report can be exported as a PDF or CSV. 3. List, then detail: Each tab opens a list and a detail page. The breadcrumb leads back. 4. Nothing to rebuild: Reports are already sorted and kept over time, not rebuilt with filters each time."></div>
+              </figure>
+            </div>
+
+            <div class="case-decision">
+              <h3 class="h4"><span class="t-secondary">05</span> A way to ask for help</h3>
+              <p><strong>The gap:</strong> Nothing in the feature list told teachers where to go when something went wrong, such as a missing pupil, a wrong score or a failed export.</p>
+              <p><strong>What I added:</strong> A Help and Support page in the main menu. Teachers fill in a short form, confirm it and see a message that it was sent. Requests go to the super admin. I proposed it, and the founders agreed.</p>
+              <figure class="case-figure is-wide">
+                <div class="frame"><img src="images/tellora-teacher-help-annotated.webp" loading="lazy" decoding="async" alt="Tellora's Help and Support flow in three steps: the form, a pop-up asking the teacher to confirm, and the form again with the message “Help request submitted.” Four numbered notes. 1. Find help in the menu: Help and Support sits in the main menu with the other sections. 2. Describe the problem: A short form to pick a topic, describe what went wrong and add an attachment. 3. Confirm before sending: Teachers confirm before the request is sent. 4. Know it was sent: A message confirms the request went to the super admin."></div>
+              </figure>
+            </div>
+          </section>
+
+          <!-- ===== 07 Testing and iteration ===== -->
+          <section class="case-section" aria-labelledby="cs-testing">
+            <p class="h6 section-num" aria-hidden="true">07</p>
+            <h2 id="cs-testing">Testing and iteration</h2>
+            <p>I tested the design with teachers before handing it over.</p>
+            <ol class="cs-grid is-process">
+              <li class="cs-card"><h3 class="h5"><span class="t-secondary" aria-hidden="true">1 ·</span> Clickable prototype</h3><p>The portal in Figma, with screens linked so teachers could click through</p></li>
+              <li class="cs-card"><h3 class="h5"><span class="t-secondary" aria-hidden="true">2 ·</span> Teacher workshop</h3><p>An online session with a founder and two teachers, who found the structure confusing</p></li>
+              <li class="cs-card"><h3 class="h5"><span class="t-secondary" aria-hidden="true">3 ·</span> One week of changes</h3><p>Sections reorganised, one report split into three, and the persona updated</p></li>
+            </ol>
+
+            <h3 class="h4">What went wrong</h3>
+            <div class="cs-grid cols-2">
+              <div class="cs-card"><h4 class="h5">The structure</h4><p>In my first version, every section linked to every other section to save clicks. But the same information appeared in several places, and teachers couldn't tell which page to use. I gave each section one clear job. Because I caught this in a prototype, fixing it took a week, not a rebuild.</p></div>
+              <div class="cs-card"><h4 class="h5">The persona</h4><p>My first persona focused on saving time and missed what teachers are trying to teach. After research and the workshop, I added literacy goals. That's why every book is scored skill by skill.</p></div>
+            </div>
+
+            <p class="case-callout"><strong>What both taught me:</strong> Ask what people are trying to achieve, and test how the pages work together, not just one at a time.</p>
+          </section>
+
+          <!-- ===== 08 Final design ===== -->
+          <section class="case-section" aria-labelledby="cs-final">
+            <p class="h6 section-num" aria-hidden="true">08</p>
+            <h2 id="cs-final">Final design</h2>
+            <p>The portal has six sections in one menu. Every list page uses the same layout, with search, filters, a table and an export button. A teacher who learns one page has learned them all.</p>
+            <figure class="case-figure is-wide">
+              <div class="frame"><img src="images/tellora-teacher-structure-diagram.webp" loading="lazy" decoding="async" alt="Diagram of the final structure: Dashboard at the top, with Classes, Students, Assignments and Reports below it. Classes leads to a class page, Class 4B, with Students Overview and Assignment Overview tabs. Students leads to a pupil's page with Assignment Books and My Books tabs. Assignments leads to an assignment's detail page showing who submitted. All three paths end at Book review, where a child's book is read, listened to and scored. Reports leads to a class, student or assignment report, then a detail page, then Export PDF or CSV."></div>
+            </figure>
+            <figure class="case-figure is-wide">
+              <div class="frame"><img src="images/tellora-teacher-book-review.webp" loading="lazy" decoding="async" alt="Tellora's Book review screen for Amelia Clarke's recorded story, The Brave Prince. On the left: Page 2 of 6 with its picture, her recording and the transcript of the page. On the right, a Score this book panel: Oracy is Good, Grammar is Meets and Vocabulary is Working towards, while Spelling and Punctuation show “NA – recorded story”. Below them are feedback for Amelia and the Save draft and Finish buttons."></div>
+              <figcaption><strong>Book review: Read, listen and score.</strong> The teacher reads the book's pages, plays the child's recording and reads the transcript. A panel lets them score the five skills, write feedback and save a draft.</figcaption>
+            </figure>
+            <div class="case-figures is-screens is-3x2">
+              <figure class="case-figure">
+                <div class="frame"><img src="images/tellora-teacher-class-page.webp" loading="lazy" decoding="async" alt="Tellora's page for class 4B on its Students Overview tab, next to the Assignment Overview tab: Create Assignment and Export Report buttons, a search box, and a table of pupils with how many books each has created, their number of assignments, their latest submission date and a View link."></div>
+                <figcaption><strong>Classes: Pupils and tasks for each class.</strong> One tab lists each pupil and their books. The other lists the tasks set for the class, who has handed them in and the class's average score for each skill.</figcaption>
+              </figure>
+              <figure class="case-figure">
+                <div class="frame"><img src="images/tellora-teacher-students-list.webp" loading="lazy" decoding="async" alt="Tellora's Students list: An Export Report button, a search box, a Class filter and a table of pupils in 4B and 4A, with how many books each has created, their latest submission date and a View link."></div>
+                <figcaption><strong>Students: Every child's work, sorted.</strong> A list of all pupils that can be filtered by class. Opening a pupil shows their set work and free writing.</figcaption>
+              </figure>
+              <figure class="case-figure">
+                <div class="frame"><img src="images/tellora-teacher-assignments-list.webp" loading="lazy" decoding="async" alt="Tellora's Assignments list: Create Assignment and Export Report buttons, a search box, a Class filter, and a table of tasks with their class, due date, how many pupils were assigned, how many have submitted, and a menu for each task."></div>
+                <figcaption><strong>Assignments: Set a task, then see who has done it.</strong> Each task shows its class, due date and how many pupils have handed it in. New tasks are created in a side panel, and deleting one asks for confirmation first.</figcaption>
+              </figure>
+              <figure class="case-figure">
+                <div class="frame"><img src="images/tellora-teacher-help-form.webp" loading="lazy" decoding="async" alt="Tellora's Help and Support form: A choice of topic (General, Classes, Students, Assignments, Reports or Other), a box to describe the problem, Add attachment, and Cancel and Submit buttons."></div>
+                <figcaption><strong>Help and Support: A way to report problems.</strong> The teacher picks a topic, describes the problem and can attach a file.</figcaption>
+              </figure>
+            </div>
+          </section>
+
+          <!-- ===== 09 Handoff ===== -->
+          <section class="case-section" aria-labelledby="cs-handoff">
+            <p class="h6 section-num" aria-hidden="true">09</p>
+            <h2 id="cs-handoff">Handoff</h2>
+            <p>The project had three stages. I owned the first, mid-fidelity UX. Visual design with a UI designer and then development came next. The UI designer would start after I left, so my files had to explain themselves.</p>
+            <div class="cs-grid cols-2">
+              <div class="cs-card"><span class="cs-badge" aria-hidden="true"><svg><use href="#i-route"/></svg></span><h3 class="h5">Clickable prototype</h3><p>20+ screens, plus menus, pop-ups and confirmations, linked in Figma</p></div>
+              <div class="cs-card"><span class="cs-badge" aria-hidden="true"><svg><use href="#i-inspect"/></svg></span><h3 class="h5">Annotated screens</h3><p>Notes on every screen explaining what each part does and why</p></div>
+            </div>
+            <p><strong>Accessibility:</strong> My UX strategy asked the next stage to meet WCAG 2.1 AA, support keyboard navigation and keep text in tables easy to scan. Work for developers, such as a component library and an accessibility audit, was planned after visual design, outside my contract.</p>
+          </section>
+
+          <!-- ===== 10 Outcome ===== -->
+          <section class="case-section" aria-labelledby="cs-outcome">
+            <p class="h6 section-num" aria-hidden="true">10</p>
+            <h2 id="cs-outcome">Outcome</h2>
+            <p class="h3 cs-outcome">Designed from <strong>a blank page in about two weeks</strong>, reorganised <strong>in one week</strong> after teachers tested it, and <strong>handed over</strong> for visual design.</p>
+
+            <div class="cs-panel is-mint">
+              <h3 class="h4">What the portal gives teachers</h3>
+              <ul class="cs-points">
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg><h4 class="h5">One place to start</h4><p>The dashboard shows the books waiting to be read and opens them in one click.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg><h4 class="h5">Every child's work, sorted</h4><p>Set work and free writing sit in separate tabs, each scored skill by skill.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg><h4 class="h5">Progress in their own language</h4><p>Scores use curriculum levels, not grades, and a summary shows which skill a class needs help with.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg><h4 class="h5">Reports ready to share</h4><p>Class, student and assignment reports are kept over time and can be exported as a PDF or CSV.</p></li>
+              </ul>
+            </div>
+
+            <div class="case-quote">
+              <p class="h6">Feedback</p>
+              <p>In the workshop, the teachers found the dashboard easy, and reactions were mostly positive. Their confusion about repeated pages led to the reorganisation. (Paraphrased from the workshop, not a written quote.)</p>
+            </div>
+            <p class="cs-note"><svg class="cs-icon" aria-hidden="true"><use href="#i-info"/></svg><span>My contract ended at handoff, so there's no usage data. I gave the team success measures to track. Teachers should review a book in one or two clicks and create a report in fewer than three steps. They should set work for the wrong class less often and find the portal quick and clear.</span></p>
+
+            <div class="cs-cells cols-1 is-tint">
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-trend"/></svg>
+                <h3 class="h5">What happened next</h3>
+                <p>The portal was handed over at mid fidelity for visual design with a UI designer. I'm no longer in touch with the team, so I can't say what has been built since.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== 11 What I learned ===== -->
+          <section class="case-section" aria-labelledby="cs-learned">
+            <p class="h6 section-num" aria-hidden="true">11</p>
+            <h2 id="cs-learned">What I learned</h2>
+            <div class="cs-panel">
+              <ul class="cs-points">
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-bulb"/></svg><h3 class="h5">Design for the job, not the data</h3><p>A portal full of tables still has to start with the teacher's main task, reading children's work.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-bulb"/></svg><h3 class="h5">Flexible isn't always simple</h3><p>One report with filters suited the way I think. Three ready-made reports suited teachers.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-bulb"/></svg><h3 class="h5">Simple rules work for everyone</h3><p>The rules I used for five-year-olds also worked for busy teachers. Each page has one job, every page shares one layout, and nothing is deleted without a confirmation.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-bulb"/></svg><h3 class="h5">Next, I'd watch a real week of marking</h3><p>Then I'd design screens for empty and error cases, such as a new teacher with no classes or a failed export.</p></li>
+              </ul>
+            </div>
+            <p class="cs-note"><svg class="cs-icon" aria-hidden="true"><use href="#i-sparkle"/></svg><span>I used ChatGPT along the way to check my thinking and refine interface copy.</span></p>
+          </section>
+
+        </div>
+
+        <!-- Next case study: PrimeTrack, in its own project colour (as in content.js) -->
+        <nav aria-label="Next case study">
+          <a class="next-case has-color" href="primetrack.html" style="--project-color: #7987FF">
+            <span class="h6">Next case study</span>
+            <span class="h3 next-title">B2B SaaS / PrimeTrack</span>
+          </a>
+        </nav>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer" aria-labelledby="contact-title">
+    <div class="container footer-top">
+      <h2 class="h6 footer-eyebrow" id="contact-title">Have a role or project in mind? Let's talk</h2>
+      <a class="footer-email" href="mailto:ux.rakshapatidar@gmail.com">
+        <span class="h3">ux.rakshapatidar<wbr>@gmail.com</span>
+        <span class="circle-btn" aria-hidden="true"><svg><use href="#arrow-up-right"/></svg></span>
+      </a>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bar">
+        <nav aria-label="Footer">
+          <ul class="footer-nav">
+            <li><a href="index.html#work">Work</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="https://www.linkedin.com/in/rakshapatidar/" target="_blank" rel="noopener">LinkedIn<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="mailto:ux.rakshapatidar@gmail.com">Mail<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens your email app)</span></a></li>
+            <li class="footer-push"><a href="https://medium.com/@raksha.patidar" target="_blank" rel="noopener">Medium<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://rakshapatidar.gumroad.com/" target="_blank" rel="noopener">Gumroad<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
+          </ul>
+        </nav>
+      </div>
+      <p class="container copyright">© <span id="year">2026</span> Raksha Patidar</p>
+    </div>
+  </footer>
+
+  <script src="content.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PrimeTrack case study · Raksha Patidar</title>
+  <meta name="description" content="How Raksha Patidar designed PrimeTrack, the internal platform 47Billion uses to manage clients, tickets and invoices, replacing three separate tools.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%234b3fd8'/><text x='50' y='66' font-size='44' text-anchor='middle' fill='white' font-family='Georgia'>RP</text></svg>">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===== Icon library =====
+       One style across the site: outline, 2px stroke, round ends. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></g></symbol>
+    <symbol id="icon-linkedin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 0 0-4 0"/></g></symbol>
+    <symbol id="icon-medium" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 15V9l4 4 4-4v6"/></g></symbol>
+    <symbol id="icon-gumroad" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M15.2 10.1A3.6 3.6 0 1 0 15.6 13.5h-3.2"/></g></symbol>
+
+    <!-- Case-study icons (decorative; the titles beside them carry the meaning) -->
+    <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></g></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2.83 2.83 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></g></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></g></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></g></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z"/><path d="M3 12l9 4.5 9-4.5M3 16.5l9 4.5 9-4.5"/></g></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></g></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5.5c0 4.2-2.9 7.9-7 9.5-4.1-1.6-7-5.3-7-9.5V6l7-3z"/><path d="M9 12l2 2 4-4"/></g></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9.5 8h5M9.5 12h5M9.5 16h3"/></g></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 8l-4 4 4 4M15.5 8l4 4-4 4M13.5 5.5l-3 13"/></g></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v.5M9 11h6M9 15h4"/></g></symbol>
+    <symbol id="i-briefcase" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18"/></g></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 18h5M10.5 21h3"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></g></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></g></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3.5l1.9 5.1 5.1 1.9-5.1 1.9L11 17.5l-1.9-5.1L4 10.5l5.1-1.9L11 3.5z"/><path d="M18.5 15.5v5M16 18h5"/></g></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></g></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 20.5l1.6-5A8.5 8.5 0 1 1 21 11.5z"/></g></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></g></symbol>
+    <symbol id="i-layout" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></g></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></g></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 0 0 0 18c1 0 1.7-.8 1.7-1.7 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.8-1.7 1.7-1.7H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><path d="M7.5 11.5h.01M9.5 7.5h.01M14.5 7.5h.01"/></g></symbol>
+    <symbol id="i-components" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l3 3-3 3-3-3 3-3zM5.5 9l3 3-3 3-3-3 3-3zM18.5 9l3 3-3 3-3-3 3-3zM12 15.5l3 3-3 3-3-3 3-3z"/></g></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/></g></symbol>
+    <symbol id="i-inspect" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M8.5 11l1.8 1.8 3.2-3.6"/></g></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></g></symbol>
+  </svg>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <nav class="container nav" aria-label="Main">
+      <a href="index.html" class="brand" aria-label="Raksha Patidar, home">
+        <span class="initials" aria-hidden="true">Raksha Patidar<span>.</span></span>
+      </a>
+
+      <div class="nav-right">
+        <ul class="nav-links" id="nav-links">
+          <li><a href="index.html#work">Work</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="https://www.linkedin.com/in/rakshapatidar/" target="_blank" rel="noopener">LinkedIn<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
+          <li><a href="mailto:ux.rakshapatidar@gmail.com">Mail<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens your email app)</span></a></li>
+        </ul>
+        <button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- PrimeTrack case study. The story comes from "PrimeTrack_Case_Study_Master.pdf"
+         (the full story) and "PrimeTrack_Case_Study_v5.pdf" (the portfolio cut).
+         The project colour and the "Next case study" link come from content.js.
+         Type: section titles are plain <h2> (serif). Everything else takes its
+         look from a class: h4 = sub-heading, h5 = title, h6 = label.
+         Icons: <svg class="cs-icon" aria-hidden="true"><use href="#i-…"/></svg>
+         EDIT: to add a screenshot, replace a <div class="shot-placeholder">…</div> with
+         <img src="images/your-file.webp" alt="Describe what the screen shows" loading="lazy"> -->
+    <article class="case" id="case-study" data-project="primetrack" aria-labelledby="case-title">
+      <div class="container">
+
+        <a class="back-link" href="index.html#work"><svg aria-hidden="true"><use href="#arrow-left"/></svg>All work</a>
+
+        <header class="case-hero">
+          <p class="case-eyebrow">Case study · B2B SaaS · Internal platform</p>
+          <h1 class="case-title" id="case-title">PrimeTrack: one platform to manage clients, tickets and invoices</h1>
+          <p class="case-lede">I designed the internal platform 47Billion uses to manage clients, licenses, tickets and invoices, replacing Zoho Invoice, Jira and Excel. In daily use since March 2024.</p>
+
+          <dl class="case-meta">
+            <div><dt class="h6">Role</dt><dd>Sole UX Designer, end to end</dd></div>
+            <div><dt class="h6">Team</dt><dd>1 PM, 1 tech lead, 2 developers</dd></div>
+            <div><dt class="h6">Timeline</dt><dd>8 weeks, research to launch</dd></div>
+            <div><dt class="h6">Platform</dt><dd>Desktop web app, internal</dd></div>
+          </dl>
+        </header>
+
+        <figure class="case-cover">
+          <div class="case-cover-frame has-image">
+            <img src="images/primetrack.webp" fetchpriority="high" alt="PrimeTrack dashboard: overview cards for organisations, licenses, tickets and invoices, ticket and invoice charts, revenue and license trends, and an organisations table.">
+          </div>
+        </figure>
+
+        <div class="case-body">
+
+          <!-- ===== At a glance ===== -->
+          <section class="case-section case-glance" aria-labelledby="cs-glance">
+            <h2 class="h6" id="cs-glance">At a glance</h2>
+            <div class="cs-cells">
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg>
+                <h3 class="h5">The problem</h3>
+                <p>Four teams ran one client business across three disconnected tools, so issues bounced and data was re-typed.</p>
+              </div>
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-pen"/></svg>
+                <h3 class="h5">What I did</h3>
+                <p>I interviewed the teams, audited their tools and designed one shared platform, then tested it and supported the build.</p>
+              </div>
+              <div class="cs-cell is-tint">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg>
+                <h3 class="h5">The outcome</h3>
+                <p>Three tools became one, a paid subscription was retired, and teams report faster ticket resolution and less duplicate data.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== 01 The problem ===== -->
+          <section class="case-section" aria-labelledby="cs-problem">
+            <p class="h6 section-num" aria-hidden="true">01</p>
+            <h2 id="cs-problem">The problem</h2>
+            <p>47Billion sells software licenses to other businesses. As the client base grew, managing those clients was split across three tools, each owned by a different team:</p>
+
+            <table class="case-table" role="table">
+              <caption class="sr-only">The three tools used before PrimeTrack</caption>
+              <thead role="rowgroup">
+                <tr role="row"><th scope="col" role="columnheader">Tool</th><th scope="col" role="columnheader">Used for</th><th scope="col" role="columnheader">Owned by</th></tr>
+              </thead>
+              <tbody role="rowgroup">
+                <tr role="row"><th scope="row" role="rowheader">Zoho Invoice</th><td role="cell" data-label="Used for">Raising invoices, tracking payments</td><td role="cell" data-label="Owned by">Finance team</td></tr>
+                <tr role="row"><th scope="row" role="rowheader">Jira</th><td role="cell" data-label="Used for">Logging and resolving client tickets</td><td role="cell" data-label="Owned by">Admin and tech teams</td></tr>
+                <tr role="row"><th scope="row" role="rowheader">Excel</th><td role="cell" data-label="Used for">Client records, licenses, user access</td><td role="cell" data-label="Owned by">Project manager</td></tr>
+              </tbody>
+            </table>
+
+            <p>Clients raised issues by email, and the admin team logged them on their behalf. The real cost sat in the handoffs between teams, as these two everyday use cases show:</p>
+
+            <!-- Use case 1 -->
+            <div class="case-flow">
+              <div class="flow-head">
+                <p class="h6">Use case 1</p>
+                <h3 class="h5" id="sc1-title">Resolving a client's invoice issue</h3>
+              </div>
+              <div class="flow-row">
+                <p class="h6" id="sc1-before">Before</p>
+                <ol class="flow" aria-labelledby="sc1-before">
+                  <li>Client emails the issue</li>
+                  <li>Finance checks the invoice in Zoho</li>
+                  <li>Admin logs it in Jira</li>
+                  <li>Tech picks it up</li>
+                </ol>
+              </div>
+              <div class="flow-row">
+                <p class="h6 t-primary" id="sc1-after">After</p>
+                <ol class="flow" aria-labelledby="sc1-after">
+                  <li>Client reports the issue</li>
+                  <li class="is-key">Finance raises a ticket, linked to the invoice</li>
+                  <li>Tech picks it up by priority</li>
+                  <li>Resolved in the ticket thread</li>
+                </ol>
+              </div>
+              <div class="flow-result">
+                <p class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg>Result</p>
+                <p>No relay through admin and nothing re-typed: every team works from the same client record</p>
+              </div>
+            </div>
+
+            <!-- Use case 2 -->
+            <div class="case-flow">
+              <div class="flow-head">
+                <p class="h6">Use case 2</p>
+                <h3 class="h5" id="sc2-title">Checking revenue and which clients are active</h3>
+              </div>
+              <div class="flow-row">
+                <p class="h6" id="sc2-before">Before</p>
+                <div class="fan-row">
+                  <div class="flow-box">CEO asks for revenue, open tickets and license use</div>
+                  <svg class="fan-lines" viewBox="0 0 64 168" aria-hidden="true" focusable="false">
+                    <defs><marker id="fan-head" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8z" fill="currentColor"/></marker></defs>
+                    <g fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#fan-head)">
+                      <path d="M3 84L58 27"/><path d="M3 84H58"/><path d="M3 84L58 141"/>
+                    </g>
+                  </svg>
+                  <ul class="fan-targets" aria-labelledby="sc2-before">
+                    <li class="flow-box">Finance checks Zoho</li>
+                    <li class="flow-box">Admin checks Jira</li>
+                    <li class="flow-box">PM checks Excel</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="flow-row">
+                <p class="h6 t-primary" id="sc2-after">After</p>
+                <ol class="flow" aria-labelledby="sc2-after">
+                  <li>CEO opens the dashboard</li>
+                  <li>Filters by day, week, month or year</li>
+                  <li class="is-key">Sees tickets, invoices, revenue and licenses</li>
+                  <li>Checks any client in the organisations table</li>
+                </ol>
+              </div>
+              <div class="flow-result">
+                <p class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg>Result</p>
+                <p>The full picture on one screen, without chasing three teams</p>
+              </div>
+            </div>
+
+            <div class="cs-panel is-butter">
+              <h3 class="h4">How disconnected tools held the business back</h3>
+              <ul class="cs-points">
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg><h4 class="h5">Slow ticket resolution</h4><p>Issues were relayed through two or three teams before tech could start, so clients waited.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg><h4 class="h5">Duplicate data entry</h4><p>Client details were re-typed into every tool, creating duplicate records and repeated errors.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg><h4 class="h5">Slower payment follow-up</h4><p>Finance chased late payments but couldn't raise an issue themselves, so every problem went through admin.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg><h4 class="h5">No visibility for leadership</h4><p>The CEO and PM had no single view of tickets, revenue or license use. Every answer meant asking three teams.</p></li>
+              </ul>
+            </div>
+
+            <p class="case-callout"><strong>How might we</strong> give every team one shared place to manage clients, so issues get resolved without chasing people across tools?</p>
+          </section>
+
+          <!-- ===== 02 Who I designed for =====
+               Every line on these cards comes from the master and v5 PDFs. -->
+          <section class="case-section" aria-labelledby="cs-users">
+            <p class="h6 section-num" aria-hidden="true">02</p>
+            <h2 id="cs-users">Who I designed for</h2>
+            <p>Five roles depended on this setup every day: three teams who do the work, and two leaders who need to see it. Each team's work depended on another's, so the real thing to design was the handoff between them.</p>
+
+            <div class="persona-group">
+              <h3 class="h6"><span class="t-primary">Primary users</span> · Teams who do the work</h3>
+              <ul class="persona-grid">
+                <li class="persona">
+                  <div class="persona-head">
+                    <span class="persona-badge" aria-hidden="true"><svg><use href="#i-shield"/></svg></span>
+                    <div class="persona-who">
+                      <h4 class="h5">Admin</h4>
+                      <p>Logs client tickets, manages users and access</p>
+                      <span class="persona-tag">Interviewed</span>
+                    </div>
+                  </div>
+                  <dl class="persona-body">
+                    <div class="persona-uses"><dt class="h6">Relied on</dt><dd><ul class="tags"><li>Jira</li><li>Email</li></ul></dd></div>
+                    <div class="persona-box is-needs"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-target"/></svg>Needs</dt><dd><ul class="cs-list"><li>To give or change access from one screen</li><li>A simpler way to log tickets than Jira</li></ul></dd></div>
+                    <div class="persona-box is-pains"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg>Pain points</dt><dd><ul class="cs-list"><li>Jira was too technical for day-to-day work</li><li>Logged every emailed issue by hand, while clients waited</li></ul></dd></div>
+                  </dl>
+                </li>
+                <li class="persona">
+                  <div class="persona-head">
+                    <span class="persona-badge" aria-hidden="true"><svg><use href="#i-receipt"/></svg></span>
+                    <div class="persona-who">
+                      <h4 class="h5">Finance</h4>
+                      <p>Raises invoices, chases payments</p>
+                      <span class="persona-tag">Interviewed</span>
+                    </div>
+                  </div>
+                  <dl class="persona-body">
+                    <div class="persona-uses"><dt class="h6">Relied on</dt><dd><ul class="tags"><li>Zoho Invoice</li></ul></dd></div>
+                    <div class="persona-box is-needs"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-target"/></svg>Needs</dt><dd><ul class="cs-list"><li>To raise invoices in PrimeTrack, from their existing templates</li><li>A client's tickets and contacts while chasing an invoice</li></ul></dd></div>
+                    <div class="persona-box is-pains"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg>Pain points</dt><dd><ul class="cs-list"><li>Chased late payments with no easy way to raise an issue</li><li>Zoho's invoice form had too many fields</li></ul></dd></div>
+                  </dl>
+                </li>
+                <li class="persona">
+                  <div class="persona-head">
+                    <span class="persona-badge" aria-hidden="true"><svg><use href="#i-code"/></svg></span>
+                    <div class="persona-who">
+                      <h4 class="h5">Tech</h4>
+                      <p>Picks up and resolves tickets</p>
+                      <span class="persona-tag">Interviewed</span>
+                    </div>
+                  </div>
+                  <dl class="persona-body">
+                    <div class="persona-uses"><dt class="h6">Relied on</dt><dd><ul class="tags"><li>Jira</li></ul></dd></div>
+                    <div class="persona-box is-needs"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-target"/></svg>Needs</dt><dd><ul class="cs-list"><li>Issues straight away, without a relay through other teams</li><li>Clear priorities, with the whole conversation in the ticket</li></ul></dd></div>
+                    <div class="persona-box is-pains"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg>Pain points</dt><dd><ul class="cs-list"><li>Issues arrived only after two or three teams</li><li>Details re-typed at every handoff, causing errors</li></ul></dd></div>
+                  </dl>
+                </li>
+              </ul>
+            </div>
+
+            <div class="persona-group">
+              <h3 class="h6"><span class="t-primary">Stakeholders</span> · Leaders who need to see it</h3>
+              <ul class="persona-grid cols-2">
+                <li class="persona">
+                  <div class="persona-head">
+                    <span class="persona-badge" aria-hidden="true"><svg><use href="#i-clipboard"/></svg></span>
+                    <div class="persona-who">
+                      <h4 class="h5">Project manager</h4>
+                      <p>Keeps client and license records</p>
+                      <span class="persona-tag">Interviewed</span>
+                    </div>
+                  </div>
+                  <dl class="persona-body">
+                    <div class="persona-uses"><dt class="h6">Relied on</dt><dd><ul class="tags"><li>Excel</li></ul></dd></div>
+                    <div class="persona-box is-needs"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-target"/></svg>Needs</dt><dd><ul class="cs-list"><li>Everything about one client in one place</li><li>Tickets, invoices and revenue in one view</li></ul></dd></div>
+                    <div class="persona-box is-pains"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg>Pain points</dt><dd><ul class="cs-list"><li>Searched several tools to piece together one client</li><li>Any answer meant asking three teams</li></ul></dd></div>
+                  </dl>
+                </li>
+                <li class="persona">
+                  <div class="persona-head">
+                    <span class="persona-badge" aria-hidden="true"><svg><use href="#i-briefcase"/></svg></span>
+                    <div class="persona-who">
+                      <h4 class="h5">CEO</h4>
+                      <p>Needs a view of how the business is doing</p>
+                      <span class="persona-tag">Stakeholder</span>
+                    </div>
+                  </div>
+                  <dl class="persona-body">
+                    <div class="persona-uses"><dt class="h6">Relied on</dt><dd><ul class="tags"><li>Updates from three teams</li></ul></dd></div>
+                    <div class="persona-box is-needs"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-target"/></svg>Needs</dt><dd><ul class="cs-list"><li>The business at a glance: tickets, invoices and licenses</li><li>Revenue, comparing sales with what's still due</li></ul></dd></div>
+                    <div class="persona-box is-pains"><dt class="h6"><svg class="cs-icon" aria-hidden="true"><use href="#i-alert"/></svg>Pain points</dt><dd><ul class="cs-list"><li>No dashboard to see what was going on</li><li>No view of which clients actively used their licenses</li></ul></dd></div>
+                  </dl>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ===== 03 Constraints (the role is in the facts at the top of the page) ===== -->
+          <section class="case-section" aria-labelledby="cs-constraints">
+            <p class="h6 section-num" aria-hidden="true">03</p>
+            <h2 id="cs-constraints">Constraints</h2>
+            <div class="cs-cells cols-4 is-tint">
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-calendar"/></svg><h3 class="h5">8 weeks</h3><p>For research and design, through to launch</p></div>
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-layers"/></svg><h3 class="h5">Full replacement</h3><p>All three tools retired, not run alongside, with existing records imported</p></div>
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-grid"/></svg><h3 class="h5">5 modules at once</h3><p>Designed in parallel, yet they had to feel like one product</p></div>
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-palette"/></svg><h3 class="h5">Existing style</h3><p>Earlier client screens already used Gilroy and a blue primary, so I built on them</p></div>
+            </div>
+            <p>So I spoke to people first, tested rough wireframes early, and checked feasibility with developers before committing to any pattern.</p>
+          </section>
+
+          <!-- ===== 04 Research findings ===== -->
+          <section class="case-section" aria-labelledby="cs-research">
+            <p class="h6 section-num" aria-hidden="true">04</p>
+            <h2 id="cs-research">Research findings</h2>
+            <p>With a tight timeline, I went straight to the source:</p>
+            <div class="cs-cells">
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-chat"/></svg><h3 class="h5">4 interviews</h3><p>Face to face with an admin, the head of finance, a tech team member and the project manager</p></div>
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-search"/></svg><h3 class="h5">Tool audit</h3><p>Zoho Invoice and Jira, as the teams actually used them</p></div>
+              <div class="cs-cell"><svg class="cs-icon" aria-hidden="true"><use href="#i-layout"/></svg><h3 class="h5">Reference review</h3><p>Admin interfaces in other products, for patterns worth borrowing</p></div>
+            </div>
+
+            <h3 class="h4">What I found</h3>
+            <div class="cs-grid cols-2">
+              <div class="cs-card"><h4 class="h5">The tools weren't broken, just not built for us</h4><p>Zoho and Jira are general-purpose products. Teams worked around features they didn't need, and admins found Jira too technical for day-to-day work.</p></div>
+              <div class="cs-card"><h4 class="h5">Every handoff meant re-typing the same information</h4><p>Nothing connected, so client details were copied by hand between tools. The amount of duplicated data surprised me more than anything else in the audit.</p></div>
+              <div class="cs-card"><h4 class="h5">Delay came from the relay, not the fix</h4><p>Most tickets weren't hard to solve. They were slow because information passed through two or three teams first. Removing handoffs mattered more than building a better ticket tool.</p></div>
+              <div class="cs-card"><h4 class="h5">Leadership was flying blind</h4><p>The CEO and project manager had no single view of tickets, invoices, revenue or client activity. Any answer meant asking three teams.</p></div>
+            </div>
+          </section>
+
+          <!-- ===== 05 Project scope ===== -->
+          <section class="case-section" aria-labelledby="cs-scope">
+            <p class="h6 section-num" aria-hidden="true">05</p>
+            <h2 id="cs-scope">Project scope</h2>
+            <p>The first release had one job: fully replace the three tools. Everything else could wait.</p>
+            <div class="cs-cells">
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg>
+                <h3 class="h5">First release</h3>
+                <ul class="tags" aria-label="In the first release"><li>Dashboard</li><li>Organisations</li><li>Invoicing</li><li>Tickets</li><li>Users</li><li>Data import</li></ul>
+              </div>
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-plus"/></svg>
+                <h3 class="h5">Added during the project</h3>
+                <ul class="tags" aria-label="Added during the project"><li>A page for each client</li><li>Invoice creation for finance</li></ul>
+              </div>
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-clock"/></svg>
+                <h3 class="h5">Saved for later</h3>
+                <ul class="tags is-later" aria-label="Saved for later"><li>Detailed financial reports</li><li>Client portal</li></ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== 06 Key design decisions ===== -->
+          <section class="case-section" aria-labelledby="cs-decisions">
+            <p class="h6 section-num" aria-hidden="true">06</p>
+            <h2 id="cs-decisions">Key design decisions</h2>
+
+            <div class="case-decision">
+              <h3 class="h4"><span class="t-secondary">01</span> Organised by task, not by team</h3>
+              <p><strong>Options:</strong> one section for each team (Finance, Admin, Tech), or shared modules: Dashboard, Organisations, Invoicing, Tickets and Users.</p>
+              <p><strong>Why modules:</strong> access doesn't follow team lines. Someone in finance may also need to see an organisation or manage its users. Team sections would have locked people out or duplicated screens; modules let access be set per person, which later shaped role management.</p>
+              <figure class="case-figure is-wide">
+                <div class="frame"><img src="images/primetrack-sidebar-annotated.webp" loading="lazy" decoding="async" alt="PrimeTrack's sidebar with three numbered notes: 1, one module for each task, shared by every team: Dashboard, Organisations, Invoicing, Ticket and Users, so finance, admin and tech all work in the same screens; 2, access is set per person, not per team, because someone in finance may also need to see an organisation or manage its users; 3, this later shaped role management, where each module became a toggle on the Users page."></div>
+              </figure>
+            </div>
+
+            <div class="case-decision">
+              <h3 class="h4"><span class="t-secondary">02</span> One page for each client</h3>
+              <p><strong>The gap:</strong> this wasn't in the original scope, but research showed people searching for the same company in several places to piece together one picture.</p>
+              <p><strong>What I proposed:</strong> an organisation page holding the client's licenses, users, linked tickets and invoices, each opening in a side drawer so nobody loses their place. A finance member looking at a late invoice can see the client's open tickets and contact details without leaving the page. The PM and CEO agreed to add it once they saw how directly it answered the duplication problem.</p>
+              <figure class="case-figure is-wide">
+                <div class="frame"><img src="images/primetrack-organisation-drawer-annotated.webp" loading="lazy" decoding="async" alt="PrimeTrack's Organisations list with Stark Industries open in a side drawer, and four numbered notes: 1, open any client from the list: View opens the organisation in a side drawer, so nobody loses their place; 2, one place for each client: details and licenses, invoices, linked tickets and users, each a tab in the same drawer; 3, checking a late invoice: finance sees every invoice for this client, with billing and payment dates; 4, tickets and contact one tab away: the client's open tickets and contact details are in the same drawer, without leaving the page."></div>
+              </figure>
+            </div>
+
+            <div class="case-decision">
+              <h3 class="h4"><span class="t-secondary">03</span> A visual dashboard instead of tables</h3>
+              <p><strong>The disagreement:</strong> the PM and CEO wanted detailed ticket and invoice tables on the dashboard. I was concerned that would recreate the overload of the old tools.</p>
+              <p><strong>How I resolved it:</strong> I presented two options: a table-heavy dashboard, and a visual one with summary cards, charts and time filters. The visual one was chosen for its lower cognitive load and faster scanning. A short organisations table stayed at the bottom, so leadership could check a client without leaving the page.</p>
+              <figure class="case-figure is-wide">
+                <div class="frame"><img src="images/primetrack-dashboard-annotated.webp" loading="lazy" decoding="async" alt="The final PrimeTrack dashboard with five numbered notes: 1, summary cards for organisations, licenses, tickets and invoices at a glance; 2, ticket and invoice status, showing what's open, closed or on hold and what's draft, paid or due; 3, a day, week, month or year filter on every view; 4, revenue, sales against what's due, added after the CEO pointed out it was missing; 5, a short organisations table to check any client without leaving the dashboard."></div>
+              </figure>
+            </div>
+
+            <div class="case-decision">
+              <h3 class="h4"><span class="t-secondary">04</span> Simpler tickets than Jira</h3>
+              <p><strong>The problem:</strong> admins found Jira too technical for day-to-day work.</p>
+              <p><strong>What I designed:</strong> a simple ticket list showing the organisation, priority, date and status. Details and a comment thread open in a side drawer, and tech picks tickets up by priority. Tickets link to their organisation and invoice, so finance no longer passes details through admin.</p>
+              <figure class="case-figure is-wide">
+                <div class="frame"><img src="images/primetrack-ticket-drawer-annotated.webp" loading="lazy" decoding="async" alt="PrimeTrack's Tickets list with a ticket open in the View Ticket drawer, and four numbered notes: 1, organisation on every ticket: the list shows organisation, priority, date and status, simpler than Jira; 2, picked up by priority: tech filters by priority and takes the next ticket; 3, linked to organisation and invoice: finance no longer passes details through admin; 4, comment thread in the ticket: the whole conversation stays with the ticket, not in email."></div>
+              </figure>
+            </div>
+
+            <div class="case-decision">
+              <h3 class="h4"><span class="t-secondary">05</span> Raising invoices inside PrimeTrack</h3>
+              <p><strong>The request:</strong> in the low-fidelity walkthrough, finance asked to raise invoices directly in PrimeTrack.</p>
+              <p><strong>What I designed:</strong> an invoice flow built on their existing templates, with far fewer fields than Zoho, because client details already lived in the product. Invoices are tracked as Draft, Paid or Due, and linking them to the client lets finance trace a problem, raise a ticket or contact the client from one place.</p>
+              <figure class="case-figure is-wide">
+                <div class="frame"><img src="images/primetrack-invoice-drawer-annotated.webp" loading="lazy" decoding="async" alt="PrimeTrack's Invoicing list with the Create Invoice drawer open, and four numbered notes: 1, built on finance's existing templates: finance picks the template they already use; 2, client details filled in: choosing the organisation pulls in its contact, licenses and time duration, because they already live in PrimeTrack; 3, far fewer fields than Zoho: only the billing dates and a note are left to complete; 4, tracked as Draft, Paid or Due: saved as a draft first, then tracked against the client in the invoice list."></div>
+              </figure>
+            </div>
+          </section>
+
+          <!-- ===== 07 Testing and iteration ===== -->
+          <section class="case-section" aria-labelledby="cs-testing">
+            <p class="h6 section-num" aria-hidden="true">07</p>
+            <h2 id="cs-testing">Testing and iteration</h2>
+            <p>I tested rough designs early, while changes were still cheap.</p>
+            <ol class="cs-grid is-process">
+              <li class="cs-card"><h3 class="h5"><span class="t-secondary" aria-hidden="true">1 ·</span> Low-fidelity walkthrough</h3><p>Role management rebuilt; invoice creation added for finance</p></li>
+              <li class="cs-card"><h3 class="h5"><span class="t-secondary" aria-hidden="true">2 ·</span> High-fidelity walkthrough</h3><p>Flows signed off by the PM and CEO</p></li>
+              <li class="cs-card"><h3 class="h5"><span class="t-secondary" aria-hidden="true">3 ·</span> User testing</h3><p>With finance, admin and tech: minor UI tweaks, no structural changes</p></li>
+            </ol>
+
+            <h3 class="h4">What went wrong</h3>
+            <div class="cs-grid cols-2">
+              <div class="cs-card"><h4 class="h5">Role management</h4><p>My first design used a drawer with a yes/no dropdown for each module. Admins needed something faster for a task they did all the time, so I rebuilt it as one page with a toggle per module. Catching it in low fidelity cost hours, not a rebuild.</p></div>
+              <div class="cs-card"><h4 class="h5">The dashboard</h4><p>I designed it around what I thought a product owner would want, and left out revenue. The CEO spotted it, and I added a revenue chart.</p></div>
+            </div>
+
+            <p class="case-callout"><strong>What both taught me:</strong> ask people what decisions they make before deciding what to show them.</p>
+          </section>
+
+          <!-- ===== 08 Final design ===== -->
+          <section class="case-section" aria-labelledby="cs-final">
+            <p class="h6 section-num" aria-hidden="true">08</p>
+            <h2 id="cs-final">Final design</h2>
+            <p>Five modules share one table and side-drawer pattern, so anyone who learns one can use the rest.</p>
+            <figure class="case-figure is-wide">
+              <div class="frame"><img src="images/primetrack.webp" loading="lazy" decoding="async" alt="PrimeTrack dashboard with overview cards, charts and an organisations table."></div>
+              <figcaption><strong>Dashboard: the business at a glance.</strong> Summary cards for organisations, licenses, tickets and invoices; charts for ticket status, invoice status, revenue and licenses, filtered by day, week, month or year; and a short organisations table for quick checks.</figcaption>
+            </figure>
+            <div class="case-figures is-screens is-3x2">
+              <figure class="case-figure">
+                <div class="frame"><img src="images/primetrack-organisations-list.webp" loading="lazy" decoding="async" alt="PrimeTrack's Organisations list: a search box, Status and Organisation filters, an Add Organisation button, and a table of clients with licenses sold, contact person, email, billing date, status and a View link."></div>
+                <figcaption><strong>Organisations: every client in one list.</strong> Search, filter by status or organisation, and open any client in a side drawer.</figcaption>
+              </figure>
+              <figure class="case-figure">
+                <div class="frame"><img src="images/primetrack-tickets-list.webp" loading="lazy" decoding="async" alt="PrimeTrack's Tickets list: a search box, Priority and Status filters, an Add Ticket button, and a table of tickets with title, organisation, who raised it, priority, raised date, status (Open, Closed or On hold) and a View link."></div>
+                <figcaption><strong>Tickets: logged once, picked up by priority.</strong> Tech resolves inside the ticket, where a comment thread keeps the whole conversation together.</figcaption>
+              </figure>
+              <figure class="case-figure">
+                <div class="frame"><img src="images/primetrack-invoicing-list.webp" loading="lazy" decoding="async" alt="PrimeTrack's Invoicing list: a search box, a Status filter open on Paid, Draft and Due, a Create Invoice button, and a table of invoices with organisation, time duration, billing date, number of licenses, status and a View link."></div>
+                <figcaption><strong>Invoicing: raise, track, chase.</strong> Raised from existing templates with fewer fields, and tracked as Draft, Paid or Due.</figcaption>
+              </figure>
+              <figure class="case-figure">
+                <div class="frame"><img src="images/primetrack-users-list.webp" loading="lazy" decoding="async" alt="PrimeTrack's Users list: a search box, a Role filter open on Accountant, Admin and Service Desk, an Add User button, and a table of users with name, email, role, an on/off toggle for each module (Organisations, Invoicing and Ticket) and a delete button."></div>
+                <figcaption><strong>Users and access: one toggle per module.</strong> Admins create users and grant or revoke access from a single page.</figcaption>
+              </figure>
+            </div>
+          </section>
+
+          <!-- ===== 09 Working with developers ===== -->
+          <section class="case-section" aria-labelledby="cs-devs">
+            <p class="h6 section-num" aria-hidden="true">09</p>
+            <h2 id="cs-devs">Working with developers</h2>
+            <p>I stayed with the team through development, because a design only works if it survives the build.</p>
+            <div class="cs-grid cols-4">
+              <div class="cs-card"><span class="cs-badge" aria-hidden="true"><svg><use href="#i-code"/></svg></span><h3 class="h5">Feasibility first</h3><p>Checked patterns with developers in low fidelity, before anything was final</p></div>
+              <div class="cs-card"><span class="cs-badge" aria-hidden="true"><svg><use href="#i-components"/></svg></span><h3 class="h5">Design system</h3><p>A style guide and components, shared through Figma Dev Mode</p></div>
+              <div class="cs-card"><span class="cs-badge" aria-hidden="true"><svg><use href="#i-route"/></svg></span><h3 class="h5">Flow walkthroughs</h3><p>Every flow explained before it was built, plus daily standups</p></div>
+              <div class="cs-card"><span class="cs-badge" aria-hidden="true"><svg><use href="#i-inspect"/></svg></span><h3 class="h5">Design QA together</h3><p>Reviewed the build side by side with developers before launch</p></div>
+            </div>
+            <p><strong>Accessibility:</strong> I checked colour and text contrast with an online contrast checker.</p>
+            <figure class="case-figure is-wide">
+              <div class="frame"><img src="images/primetrack-design-system-foundations.webp" loading="lazy" decoding="async" alt="PrimeTrack's style guide: a colour palette (primary blue #5B67E8 with light and subtle tints, secondary orange #E8784F, three text greys, border and background greys, and colours for data, success, danger and warning), and the Urbanist type scale in Regular, Medium, SemiBold and Bold, from 30px metrics and 20px page headings down to 14px and 12px body text."></div>
+            </figure>
+            <figure class="case-figure is-wide">
+              <div class="frame"><img src="images/primetrack-design-system-components.webp" loading="lazy" decoding="async" alt="PrimeTrack's components: buttons (filled, outline, text and link), inputs (a dropdown, a filled field and a search box), status badges (Active, Inactive, Disabled, Paid and Draft) and navigation items, a table with a highlighted row, a metric card for Total Organisations, a side drawer with tabs for Organisation Details, Invoices, Tickets and Users, and access toggles for each module."></div>
+            </figure>
+          </section>
+
+          <!-- ===== 10 Impact ===== -->
+          <section class="case-section" aria-labelledby="cs-impact">
+            <p class="h6 section-num" aria-hidden="true">10</p>
+            <h2 id="cs-impact">Impact</h2>
+            <p class="h3 cs-outcome">PrimeTrack replaced <strong>three tools</strong>, retired <strong>a paid subscription</strong>, and has been used daily by <strong>all five teams</strong> since March 2024.</p>
+
+            <div class="cs-panel is-mint">
+              <h3 class="h4">What changed for the teams</h3>
+              <ul class="cs-points">
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg><h4 class="h5">Faster ticket resolution</h4><p>Tickets no longer pass through several teams and tools before work starts.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg><h4 class="h5">Faster user access</h4><p>Admins grant or change access from one screen.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg><h4 class="h5">Less duplicate data</h4><p>Client information is entered once and traced in one place.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-check"/></svg><h4 class="h5">Easier invoicing</h4><p>Finance raises and tracks invoices next to the client's full context.</p></li>
+              </ul>
+            </div>
+
+            <div class="case-quote">
+              <p class="h6">Feedback</p>
+              <p>The CEO said they liked that I'd kept accessibility in mind and created a design system for the future. The teams described PrimeTrack as simple, minimal and easy to work with.</p>
+            </div>
+            <p class="cs-note"><svg class="cs-icon" aria-hidden="true"><use href="#i-info"/></svg><span>We didn't measure baselines before launch, so these changes come from the teams' own feedback rather than tracked metrics. Next time, I'd agree success metrics such as ticket resolution time with the PM before launch.</span></p>
+
+            <div class="cs-cells cols-1 is-tint">
+              <div class="cs-cell">
+                <svg class="cs-icon" aria-hidden="true"><use href="#i-trend"/></svg>
+                <h3 class="h5">What happened next</h3>
+                <p>The product worked well enough to be extended outward. I designed a client admin portal that mirrors the internal ticket experience, so clients now raise tickets themselves instead of emailing. Those tickets arrive directly in PrimeTrack, and the portal is live and in use.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== 11 What I learned ===== -->
+          <section class="case-section" aria-labelledby="cs-learned">
+            <p class="h6 section-num" aria-hidden="true">11</p>
+            <h2 id="cs-learned">What I learned</h2>
+            <div class="cs-panel">
+              <ul class="cs-points">
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-bulb"/></svg><h3 class="h5">Speed is a feature in data-heavy tools</h3><p>I now design the most frequent tasks to be the fastest.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-bulb"/></svg><h3 class="h5">Ask what decisions people make first</h3><p>A dashboard is only as good as the questions it answers.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-bulb"/></svg><h3 class="h5">I wouldn't skip mid fidelity again</h3><p>It would have caught small layout issues earlier.</p></li>
+                <li><svg class="cs-icon" aria-hidden="true"><use href="#i-bulb"/></svg><h3 class="h5">Next, I'd build detailed financial reports</h3><p>The natural next step for finance and leadership.</p></li>
+              </ul>
+            </div>
+            <p class="cs-note"><svg class="cs-icon" aria-hidden="true"><use href="#i-sparkle"/></svg><span>I used ChatGPT along the way to refine interface copy and to talk through problems when I was stuck.</span></p>
+          </section>
+
+        </div>
+
+        <nav aria-label="More work">
+          <a class="next-case" href="index.html#work" data-field="next">
+            <span class="h6" data-field="next-label">More work</span>
+            <span class="h3 next-title" data-field="next-title">Back to all case studies</span>
+          </a>
+        </nav>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer" aria-labelledby="contact-title">
+    <div class="container footer-top">
+      <h2 class="h6 footer-eyebrow" id="contact-title">Have a role or project in mind? Let's talk</h2>
+      <a class="footer-email" href="mailto:ux.rakshapatidar@gmail.com">
+        <span class="h3">ux.rakshapatidar<wbr>@gmail.com</span>
+        <span class="circle-btn" aria-hidden="true"><svg><use href="#arrow-up-right"/></svg></span>
+      </a>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bar">
+        <nav aria-label="Footer">
+          <ul class="footer-nav">
+            <li><a href="index.html#work">Work</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="https://www.linkedin.com/in/rakshapatidar/" target="_blank" rel="noopener">LinkedIn<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="mailto:ux.rakshapatidar@gmail.com">Mail<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens your email app)</span></a></li>
+            <li class="footer-push"><a href="https://medium.com/@raksha.patidar" target="_blank" rel="noopener">Medium<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://rakshapatidar.gumroad.com/" target="_blank" rel="noopener">Gumroad<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
+          </ul>
+        </nav>
+      </div>
+      <p class="container copyright">© <span id="year">2026</span> Raksha Patidar</p>
+    </div>
+  </footer>
+
+  <script src="content.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

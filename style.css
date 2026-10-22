@@ -1,0 +1,1861 @@
+/* =========================================================
+   PORTFOLIO STYLES
+   ---------------------------------------------------------
+   1. Tokens      — colour, type, spacing (light + dark)
+   2. Base        — h1–h6 (+ matching .h1–.h6 classes), focus
+   3. Layout      — container, 12-column grid, section rhythm
+   4. Components  — circle arrow, whole-card links, chips
+   5. Sections    — header, hero, work, about, side projects, footer
+   6. Case study page (case-study.html)
+   7. Style guide page (style-guide.html)
+   8. Tablets — all mid-size-screen spacing in one place
+   9. Phones — all small-screen spacing in one place
+   10. Print / PDF — for saving the style guide as a PDF
+   Change a token once and the whole site updates.
+   ========================================================= */
+
+/* =========================================================
+   1. TOKENS
+   Every token is documented in style-guide.html.
+   Colour rules (WCAG 2.2 AA):
+   - text-primary, text-secondary, accent: ≥4.5:1 on every surface
+   - border-strong, focus: ≥3:1 on every surface (UI boundaries)
+   The one exception: project cards use each project's own brand
+   colour (see .has-color).
+   ========================================================= */
+
+/* ---- Colour: light theme (default) ----
+   .theme-light / .theme-dark let the style guide show both palettes. */
+:root, .theme-light {
+  color-scheme: light;
+
+  /* Surfaces */
+  --surface-page: #faf8f5;      /* page background */
+  --surface: #ffffff;           /* cards, tiles, chips */
+  --surface-sunken: #f2efe9;    /* tab track, quiet tiles */
+  --surface-tint-1: #e4e0ff;    /* lilac  */
+  --surface-tint-2: #d9f0e5;    /* mint   */
+  --surface-tint-3: #fbeccb;    /* butter */
+  --surface-inverse: #17161d;   /* footer */
+  /* Highlights inside every case study (the outcome, "How might we", key
+     steps): one lilac on every page, whatever the project's own colour */
+  --surface-highlight: color-mix(in srgb, #7987FF 14%, var(--surface-page));
+  /* The feedback card on case studies: the inverse of the page */
+  --surface-quote: #17161d;
+  --border-quote: #2f2d3a;
+  --text-quote: #f3f1ec;
+  --text-quote-secondary: #aaa7b5;
+
+  /* Text */
+  --text-primary: #17161d;      /* headings, body, the key words of a headline */
+  --text-secondary: #5d5a66;    /* supporting words, labels, meta */
+  --text-on-accent: #ffffff;    /* text on an accent fill */
+  --text-inverse: #f3f1ec;      /* text on the dark footer */
+  --text-inverse-secondary: #aaa7b5;
+
+  /* Accent, borders, focus */
+  --accent: #4b3fd8;            /* iris: the closing phrase of a headline, link hovers. Use sparingly */
+  --accent-inverse: #a99fff;    /* the same iris on the dark footer: the email and its arrow on hover */
+  --border: #e6e1d8;            /* decorative dividers only */
+  --border-strong: #7a7685;     /* boundaries of controls */
+  --border-inverse: #2f2d3a;
+  --focus: #4b3fd8;
+  --focus-inverse: #f3f1ec;
+
+  /* Elevation */
+  --shadow-card: 0 18px 32px -18px rgb(23 22 29 / .35);
+  --shadow-raised: 0 28px 56px -28px rgb(23 22 29 / .45);
+  --shadow-shot: -16px -16px 48px -12px rgb(23 22 29 / .28);   /* lifts product mockups */
+}
+
+:root {
+  --text-logo: 1.625rem;      /* the "Raksha Patidar." logo only */
+
+  /* ---- Font families ---- */
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body: "Google Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* ---- Type scale (rem only) ----
+     h1–h3 use the display serif, h4–h6 use Google Sans.
+     Need the look of a heading without being one? Use class="h1"…"h6". */
+  --text-h1: clamp(2.75rem, 7.8vw, 6.5rem);   /* other H1s; the hero headline sizes itself to the hero (5b) */
+  --text-h2: clamp(2rem, 4vw, 3.5rem);
+  --text-h3: clamp(1.75rem, 3vw, 2.5rem);
+  --text-h4: 1.375rem;
+  --text-h5: 1.125rem;
+  --text-h6: 0.8125rem;       /* 13px labels */
+  --text-body: 1.0625rem;     /* 17px running text */
+  --text-small: 0.9375rem;    /* 15px UI labels (nav, tabs) and case-study body text */
+  --text-caption: 0.8125rem;  /* 13px: the smallest size on the site */
+
+  /* ---- Spacing scale ---- */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-96: 96px;
+  --space-128: 128px;
+  --section-pad: clamp(80px, 10vw, 144px);   /* every section uses this */
+
+  /* ---- Layout ---- */
+  --max-width: 1280px;
+  --gutter: 16px;             /* side margins on phones; tablets and laptops below */
+  --gap: clamp(12px, 1.6vw, 24px);
+  --radius-lg: 28px;
+  --radius-md: 20px;
+  --radius-sm: 16px;
+  --radius-xs: 8px;           /* screens: product mockups and screenshots */
+  --header-h: 72px;
+}
+
+/* Side margins grow with the screen:
+   phones 16px · tablets up to 80px (80 at 768) · laptops ~100px (at 1280) · large up to 112px */
+@media (min-width: 600px)  { :root { --gutter: clamp(48px, 10.4vw, 80px); } }
+@media (min-width: 1024px) { :root { --gutter: clamp(80px, 7.8vw, 112px); } }
+
+/* Tablets (600–1023px): section titles step up so they clearly outrank card
+   and tile titles (H2 36–40 vs H3 28, the same ×1.4 step as on laptops).
+   Every other size follows the desktop scale. */
+@media (min-width: 600px) and (max-width: 1023px) {
+  :root {
+    --text-h2: clamp(2.25rem, 5vw, 2.5rem);
+    --text-h3: 1.75rem;
+    --gap: 24px;               /* gap between cards and tiles */
+  }
+}
+
+/* Phones (under 600px): the same type roles, in steps sized for a small screen
+   (about ×1.25–1.4 between levels).
+   H1 40 · H2 28 · H3 22 · H4 20 · H5 17 · Body 16 · Small 14 · H6 & Caption 13 */
+@media (max-width: 599px) {
+  :root {
+    --text-h1: 2.5rem;
+    --text-h2: 1.75rem;
+    --text-h3: 1.375rem;
+    --text-h4: 1.25rem;
+    --text-h5: 1.0625rem;
+    --text-body: 1rem;
+    --text-small: 0.875rem;
+    --gap: 16px;              /* gap between cards = the side margin */
+  }
+}
+
+/* Dark theme: OFF FOR NOW, to be redesigned in phase 2.
+   The site no longer follows the system's dark setting and has no theme
+   toggle, so these values only reach the style guide's dark palette
+   (.theme-dark); nothing sets data-theme="dark". To turn dark mode back on:
+   wrap a copy of this block in @media (prefers-color-scheme: dark)
+   { :root:not([data-theme="light"]) { … } }, and put back the theme button and
+   the saved-theme script in each page's <head>.
+   The values below are the first design: same token names, designed for dark
+   (not inverted), warm charcoal neutrals, three steps of elevation (page,
+   cards, quiet panels) and dusty tints (lilac = violet, mint = sage,
+   butter = sand). The feedback card is the inverse of the page. */
+:root[data-theme="dark"], .theme-dark {
+  color-scheme: dark;
+  --surface-page: #12100f;
+  --surface: #1a1816;
+  --surface-sunken: #22201d;
+  --surface-tint-1: #2e2e42;
+  --surface-tint-2: #23352e;
+  --surface-tint-3: #3c3428;
+  --surface-inverse: #090807;
+  --surface-highlight: #2e2e42;
+  --surface-quote: #f3f1ec;
+  --border-quote: #f3f1ec;
+  --text-quote: #17161d;
+  --text-quote-secondary: #5d5a66;
+  --text-primary: #f3f1ec;
+  --text-secondary: #b6b0a9;
+  --text-on-accent: #17161d;
+  --text-inverse-secondary: #b6b0a9;
+  --accent: #a99fff;
+  --border: #302d2a;
+  --border-strong: #8a857e;
+  --border-inverse: #1e1d1a;
+  --focus: #a99fff;
+  --shadow-card: 0 18px 32px -18px rgb(0 0 0 / .7);
+  --shadow-raised: 0 28px 56px -28px rgb(0 0 0 / .8);
+  --shadow-shot: -16px -16px 48px -12px rgb(0 0 0 / .6);
+}
+
+/* =========================================================
+   2. BASE
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + var(--space-16)); }
+
+body {
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+/* No word left alone on the last line of a paragraph or list item,
+   and headings wrap into lines of similar length (every screen size) */
+p, li, dd, figcaption { text-wrap: pretty; }
+h1, h2, h3 { text-wrap: balance; }
+
+/* ---- Headings: one definition per level, used everywhere ---- */
+h1, h2, h3, h4, h5, h6 { margin: 0; }
+
+h1, .h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-h1);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+h2, .h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-h2);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+h3, .h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-h3);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  text-transform: none;
+}
+h4, .h4 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-h4);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+h5, .h5 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-h5);
+  line-height: 1.4;
+  letter-spacing: 0;
+  text-transform: none;
+}
+h6, .h6 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-h6);
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* Text helpers */
+.small { font-size: var(--text-small); }
+.caption { font-size: var(--text-caption); }
+.muted { color: var(--text-secondary); }
+
+/* Headline colour rule (see style guide):
+   the statement in primary; .t-accent = the closing phrase, the payoff to
+   remember (one per headline). .t-secondary = supporting text outside the hero. */
+.t-secondary { color: var(--text-secondary); }
+.t-primary { color: var(--text-primary); }   /* a label that needs a little more weight, e.g. "After" */
+.t-accent { color: var(--accent); }
+
+/* Accessibility */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.skip-link {
+  position: absolute; left: var(--space-16); top: -64px; z-index: 200;
+  background: var(--accent); color: var(--text-on-accent);
+  padding: 10px var(--space-16); border-radius: 10px; font-weight: 600; text-decoration: none;
+}
+.skip-link:focus { top: var(--space-16); }
+
+/* =========================================================
+   3. LAYOUT — container, 12-column grid, section rhythm
+   ========================================================= */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.grid12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+/* One rhythm: every section starts --section-pad below the previous one,
+   and the last section keeps the same space above the footer. */
+.section { padding-top: var(--section-pad); }
+main > .section:last-of-type { padding-bottom: var(--section-pad); }
+
+.section-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: var(--space-8) var(--space-16);
+  margin-bottom: var(--space-48);
+  padding-bottom: var(--space-24);
+  border-bottom: 1px solid var(--border);
+}
+.section-head:has(+ .section-intro) { margin-bottom: var(--space-24); }
+.section-intro {
+  max-width: 56ch;
+  margin-bottom: var(--space-48);
+  color: var(--text-secondary);
+  font-size: var(--text-body);
+}
+
+/* =========================================================
+   4. COMPONENTS
+   ========================================================= */
+/* Circle arrow (decorative). Put class="has-circle" on the clickable parent.
+   44px: the same size as the theme and menu buttons. */
+.circle-btn {
+  display: inline-grid; place-items: center; flex: none;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  transition: background-color .3s ease, color .3s ease, border-color .3s ease;
+}
+.circle-btn svg { width: 18px; height: 18px; transition: transform .3s ease; }
+.has-circle:hover .circle-btn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text-on-accent);
+}
+.has-circle:hover .circle-btn svg { transform: rotate(45deg); }
+
+/* Whole-card links: one <a> on the title, its ::after covers the card.
+   One tab stop per card; the focus ring is drawn around the whole card. */
+.stretched::after { content: ""; position: absolute; inset: 0; z-index: 2; }
+@supports selector(:has(a)) {
+  .stretched:focus-visible { outline: none; }
+  .has-stretched:has(.stretched:focus-visible) {
+    outline: 2px solid var(--focus);
+    outline-offset: 4px;
+  }
+}
+
+/* Chips (tags) */
+.tags { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+.tags li {
+  padding: var(--space-4) var(--space-12);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: var(--text-caption); font-weight: 600; line-height: 1.5;
+}
+
+/* =========================================================
+   5a. HEADER
+   ========================================================= */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: color-mix(in srgb, var(--surface-page) 85%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s;
+}
+.site-header.scrolled { border-bottom-color: var(--border); }
+
+.nav { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); height: var(--header-h); }
+
+.brand { display: inline-flex; align-items: center; text-decoration: none; min-height: 44px; }
+.initials { font-family: var(--font-display); font-size: var(--text-logo); line-height: 1; }
+.initials span { color: var(--accent); }
+
+.nav-right { display: flex; align-items: center; gap: var(--space-8); }
+
+.nav-links { display: flex; align-items: center; gap: var(--space-4); }
+.nav-links a {
+  display: inline-flex; align-items: center; gap: var(--space-4);
+  min-height: 44px; padding: 0 14px; border-radius: 999px;
+  font-size: var(--text-small); font-weight: 500;
+  color: var(--text-secondary); text-decoration: none;
+  transition: color .2s, background-color .2s;
+}
+.nav-links a:hover { color: var(--text-primary); background: var(--surface-sunken); }
+.ext { width: 14px; height: 14px; flex: none; }
+
+/* Icon buttons (theme, menu): no outline. The icon itself identifies the
+   control (well above the 3:1 needed); hover shows a soft circle and keyboard
+   focus shows the focus ring. The 44px tap area stays. */
+.icon-btn {
+  display: inline-grid; place-items: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: transparent; color: var(--text-primary);
+  border: 0; cursor: pointer;
+  transition: background-color .2s;
+}
+.icon-btn:hover { background: var(--surface-sunken); }
+/* Pull the last icon out by its inner space, so the icon itself lines up
+   with the right margin (as the logo does on the left) */
+.nav-right { margin-right: -12px; }
+.icon-btn svg { width: 20px; height: 20px; }
+
+.icon-sun { display: none; }
+:root[data-theme="dark"] .icon-sun { display: block; }
+:root[data-theme="dark"] .icon-moon { display: none; }
+
+.menu-btn { display: none; }
+@media (max-width: 720px) {
+  .menu-btn { display: inline-grid; }
+  .nav-links {
+    display: none;
+    position: absolute; top: var(--header-h); left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    padding: var(--space-8) var(--gutter) var(--space-24);
+    background: var(--surface-page); border-bottom: 1px solid var(--border);
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a {
+    padding: 0; min-height: 56px; border-radius: 0;
+    font-size: var(--text-h5); color: var(--text-primary);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-links a:hover { background: none; }
+}
+
+/* =========================================================
+   5b. HERO — greeting + audience tabs, then the headline
+   Type hierarchy: H5 (greeting) → H1 (headline).
+   The hero ends where its content ends, so the gap to the next section
+   is the same --section-pad used between every section.
+   The whole hero always fits inside the first screen (see below).
+   ========================================================= */
+.hero {
+  position: relative;
+  /* Space under the header: 6% of the screen width or 8% of its height,
+     whichever is smaller, between 48 and 96px
+     (phones 48 · tablets ~48–60 · laptops ~60–72 · large screens up to 96).
+     The second line uses svh, the screen height with mobile browser bars showing;
+     older browsers ignore it and use the first line. */
+  padding-top: clamp(var(--space-48), min(6vw, 8vh), var(--space-96));
+  padding-top: clamp(var(--space-48), min(6vw, 8svh), var(--space-96));
+}
+
+.hero-intro {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: var(--space-16) var(--space-24);
+  margin-bottom: var(--space-32);
+}
+
+/* Faint column lines behind the hero (decorative). They run a little past
+   the headline and fade out, so they never end on a hard edge. */
+.hero-lines {
+  position: absolute; inset: 0 0 calc(var(--section-pad) / -2) 0; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+}
+.hero-lines .grid12 { height: 100%; }
+.hero-lines span { border-inline: 1px dashed color-mix(in srgb, var(--border) 70%, transparent); }
+@media (max-width: 960px) {
+  .hero-lines .grid12 { grid-template-columns: repeat(6, 1fr); }
+  .hero-lines span:nth-child(n+7) { display: none; }
+}
+
+.hero .container { position: relative; }
+
+.tabs {
+  display: inline-flex; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-4);
+  border-radius: 999px; background: var(--surface-sunken); border: 1px solid var(--border);
+}
+.tab {
+  min-height: 44px; padding: 0 20px; border-radius: 999px; border: 0;
+  background: transparent; color: var(--text-secondary);
+  font: 500 var(--text-small)/1 var(--font-body); cursor: pointer;
+  transition: background-color .2s, color .2s;
+}
+.tab:hover { color: var(--text-primary); }
+/* Selected tab: a solid primary pill, so the selected state stands out
+   ~15:1 against the track in both themes (WCAG 1.4.11) */
+.tab[aria-selected="true"] {
+  background: var(--text-primary); color: var(--surface-page);
+}
+
+/* One phrase per line. If a phrase is too long for a phone, it wraps
+   within itself, balanced, so it never breaks mid-phrase into the next line. */
+.hero h1 { text-wrap: balance; }
+.hero h1 .line { display: block; }
+/* Hero headline size, tablets and up: as large as the hero allows.
+   - Width: the longest line (about 6.3em) fills ~95% of the text column.
+     15cqi = 15% of the hero's text column (the .container below).
+   - Height: the whole hero stays inside the first screen: 30svh − 4rem.
+   The smaller of the two wins, between 44 and 80px, so the headline never
+   fills the whole hero: laptops and tablets 80px (~70px at 600px). Phones keep 40px.
+   The first line is for older browsers; the second replaces it where supported. */
+.hero > .container { container-type: inline-size; }
+@media (min-width: 600px) {
+  .hero h1 {
+    font-size: clamp(2.75rem, min(12vw, 30vh - 4rem), 5rem);
+    font-size: clamp(2.75rem, min(15cqi, 30svh - 4rem), 5rem);
+  }
+}
+
+/* Both headlines share one grid cell, so the area is always as tall as the
+   longer one and the page below never jumps when switching tabs.
+   The hidden one is invisible to everyone, including screen readers. */
+.hero-panels { display: grid; }
+.hero-panels > .panel { grid-area: 1 / 1; }
+.panel[hidden] { display: block; visibility: hidden; }
+.panel:not([hidden]) h1 { animation: rise .5s ease both; }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* =========================================================
+   5c. WORK — one card per project (built from content.js)
+   ========================================================= */
+.projects { display: grid; gap: var(--space-32); }
+
+.tint-1 { --tint: var(--surface-tint-1); }
+.tint-2 { --tint: var(--surface-tint-2); }
+.tint-3 { --tint: var(--surface-tint-3); }
+/* A project's own brand colour (content.js → color), softened onto the page
+   background: a pale tint in light mode. In dark mode it's mixed in OKLab at
+   26%, so any brand colour lands at the same lightness as the three tints
+   and the project cards match each other. */
+.has-color { --tint: color-mix(in srgb, var(--project-color) 14%, var(--surface-page)); }
+:root[data-theme="dark"] .has-color, .theme-dark .has-color { --tint: color-mix(in oklab, var(--project-color) 26%, var(--surface-page)); }
+/* The style guide's light palette keeps the light formula in dark mode */
+:root .theme-light .has-color { --tint: color-mix(in srgb, var(--project-color) 14%, var(--surface-page)); }
+
+.project {
+  --card-pad: clamp(20px, 4vw, 56px);
+  --grid-line: color-mix(in srgb, var(--text-primary) 7%, transparent);
+  position: relative;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  padding: var(--card-pad) var(--card-pad) 0;
+  border-radius: var(--radius-lg);
+  background-color: var(--tint, var(--surface-tint-1));
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transition: transform .4s ease, box-shadow .4s ease;
+}
+/* The card in the middle of the screen (and the hovered card) lifts.
+   Nothing fades, so every card keeps full contrast. */
+.project.is-active,
+.project:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-raised);
+}
+
+/* The project's name on the left, chips on the right, centred on the name.
+   When there's no room on the right the chips wrap under the name; on phones
+   they move under the outcome line (section 9). */
+.project-head {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--space-8) var(--space-24);
+}
+.project-title a { text-decoration: none; }
+/* Chips: all white; the company first, with a briefcase, then the type of product */
+.project-head .tags li { box-shadow: 0 1px 0 rgb(23 22 29 / .06); }
+.project-head .tags .tag-company { display: inline-flex; align-items: center; gap: 6px; }
+.tag-company svg { width: 15px; height: 15px; flex: none; }
+/* Hover cue on the title (the whole card is the link) */
+.project:hover .project-title a {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.12em;
+}
+.project-outcome {
+  margin-top: var(--space-8);
+  color: var(--text-secondary);
+}
+/* Screenshot: identical on every card. Sits bottom-right and bleeds off the
+   right and bottom edges by the same amount (the card clips it). The top of
+   the mockup shows; the full image is on the case-study page. */
+.project-shot {
+  position: relative;
+  margin: var(--space-48) calc(-1 * var(--card-pad)) -24px clamp(0px, 11%, 140px);
+  height: clamp(260px, 42vw, 570px);
+  border-radius: var(--radius-xs) 0 0 0;
+  border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent);
+  border-right: 0; border-bottom: 0;
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: var(--shadow-shot);
+}
+.project-shot img { width: 100%; height: auto; }   /* never stretched or scaled out of proportion */
+.shot-placeholder {
+  height: 100%;
+  display: grid; place-content: center; justify-items: center; gap: var(--space-8);
+  color: var(--text-secondary); font-size: var(--text-caption);
+}
+.shot-placeholder svg { width: 32px; height: 32px; }
+
+@media (max-width: 599px) {
+  .project-shot { margin-top: var(--space-32); }
+}
+
+/* =========================================================
+   5d. ABOUT — statement + experience table
+   ========================================================= */
+/* No row gap: the space between the statement and the table is set by .xp only */
+.about-grid { row-gap: 0; }
+.statement { grid-column: 1 / span 8; color: var(--text-secondary); }
+.statement strong { font-weight: inherit; color: var(--text-primary); }
+
+/* Experience: a real <table>, aligned to the same left edge as the section title */
+.xp {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-top: var(--space-64);
+  border-collapse: collapse;
+  font-size: var(--text-body);
+}
+.xp thead {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+.xp th, .xp td {
+  padding: var(--space-24) var(--space-16) var(--space-24) 0;
+  border-top: 1px solid var(--border);
+  text-align: left; vertical-align: baseline;
+}
+.xp tbody tr:last-child > * { border-bottom: 1px solid var(--border); }
+.xp tbody th {
+  width: 34%;
+  font-size: var(--text-h5); font-weight: 600; line-height: 1.4;   /* the H5 style */
+  color: var(--text-primary);
+}
+.xp td { color: var(--text-secondary); }
+.xp .years { padding-right: 0; text-align: right; white-space: nowrap; }
+
+@media (max-width: 960px) {
+  .statement { grid-column: 1 / -1; }
+}
+/* Phones and small tablets (up to 720px): each row stacks (organisation + years,
+   then role). Below ~690px the three columns are too narrow, so names and roles
+   would wrap to two lines and rows would end up different heights.
+   ARIA roles in the markup keep the table semantics when display changes. */
+@media (max-width: 720px) {
+  .xp, .xp tbody, .xp tr, .xp th, .xp td { display: block; }
+  .xp tbody tr {
+    display: grid; grid-template-columns: 1fr auto; gap: var(--space-4) var(--space-16);
+    padding: var(--space-16) 0;
+    border-top: 1px solid var(--border);
+  }
+  .xp tbody tr:last-child { border-bottom: 1px solid var(--border); }
+  .xp th, .xp td, .xp tbody tr:last-child > * { padding: 0; border: 0; }
+  .xp tbody th { width: auto; }
+  .xp .role { grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* =========================================================
+   5e. SIDE PROJECTS — bento grid (same tint family as Work)
+   ========================================================= */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: minmax(200px, auto);   /* tiles fit their content, never shorter than 200px */
+  gap: var(--gap);
+}
+
+.tile {
+  --tile-pad: clamp(20px, 2.5vw, 32px);   /* tablets 32 · phones 24 (sections 8 and 9) */
+  --fab-space: var(--space-24);            /* above and below the arrow circle · phones 16 */
+  position: relative;
+  overflow: hidden;
+  display: flex; flex-direction: column; gap: var(--space-16);
+  padding: var(--tile-pad);
+  border-radius: var(--radius-lg);
+  transition: transform .3s ease;
+}
+.tile.has-circle:hover { transform: translateY(-4px); }
+/* The arrow sits in the bottom-right corner: on the padding line at the right,
+   with the same space above and below it (--fab-space) */
+.tile .circle-btn { position: absolute; right: var(--tile-pad); bottom: var(--fab-space); }
+.tile h3 a { text-decoration: none; }
+
+/* Placement on the 12-column grid */
+.tile-medium  { grid-column: 1 / 7;  grid-row: 1 / 3; }
+.tile-stack   { grid-column: 7 / 13; grid-row: 1 / 2; }
+.tile-gumroad { grid-column: 7 / 13; grid-row: 2 / 4; }
+.tile-vibe    { grid-column: 1 / 4;  grid-row: 3 / 4; }
+.tile-me      { grid-column: 4 / 7;  grid-row: 3 / 4; }
+
+/* Below 1200px the tiles stack, so the product cards always have room
+   (half-width tiles get too narrow for "Whiteboarding" under ~1160px) */
+@media (max-width: 1199px) {
+  .tile-medium, .tile-stack, .tile-gumroad { grid-column: 1 / -1; grid-row: auto; }
+  .tile-vibe { grid-column: 1 / 7; grid-row: auto; }
+  .tile-me { grid-column: 7 / 13; grid-row: auto; }
+}
+@media (max-width: 599px) {
+  .tile-vibe, .tile-me { grid-column: 1 / -1; }
+}
+
+/* Writing (Medium) */
+.tile-medium { background: var(--surface); border: 1px solid var(--border); }
+/* The article list spans the whole card (inside the padding) on every screen;
+   the arrow sits under it on the right. No extra space above the first article
+   or below the last, so the gaps around the list match the other tiles (16px).
+   Each small arrow stays at the right; a title can run up to 24px before it,
+   and its lines fill as far as they can (plain wrapping, not "pretty").
+   The arrow circle has the same space above it as below it (--fab-space). */
+.articles { margin-top: auto; }
+.articles li + li { border-top: 1px solid var(--border); }
+.articles a {
+  position: relative; z-index: 3;
+  display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-24);
+  padding: var(--space-16) 0;
+  text-decoration: none;
+}
+.articles li:first-child a { padding-top: 0; }
+.articles li:last-child a { padding-bottom: 0; }
+.articles + .circle-btn {
+  position: static; align-self: flex-end;
+  margin-top: calc(var(--fab-space) - var(--space-16));      /* + the 16px tile gap */
+  margin-bottom: calc(var(--fab-space) - var(--tile-pad));   /* into the bottom padding */
+}
+.articles a:hover .article-title { text-decoration: underline; text-underline-offset: 4px; }
+.article-title { font-weight: 500; text-wrap: wrap; }
+.article-arrow { width: 16px; height: 16px; flex: none; color: var(--text-secondary); transition: transform .2s; }
+.articles a:hover .article-arrow { transform: translate(2px, -2px); color: var(--accent); }
+
+/* How I build */
+.tile-stack {
+  background-color: var(--surface-tint-1);
+  background-image: radial-gradient(color-mix(in srgb, var(--accent) 22%, transparent) 1px, transparent 1.5px);
+  background-size: 16px 16px;
+}
+/* Tool icons: always one row of six, 60px each. Where the tile is too narrow
+   (small tablets, phones) they shrink, logos included: the logo keeps the
+   same share of the tile (28 of 60px). Sizes are worked out from the row's
+   width (cqi) and set as plain width and height, and the logo is centred with
+   flexbox, so every browser, Safari included, keeps each logo in the middle.
+   Browsers without cqi use the fixed 60/28px sizes and wrap instead. */
+.apps { --app-gap: 10px; container-type: inline-size; display: flex; flex-wrap: wrap; gap: var(--app-gap); margin-top: auto; }
+.app {
+  display: flex; align-items: center; justify-content: center; flex: none;
+  width: 60px; height: 60px;
+  width: min(60px, calc((100cqi - 5 * var(--app-gap)) / 6));
+  height: min(60px, calc((100cqi - 5 * var(--app-gap)) / 6));
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  box-shadow: var(--shadow-card);
+}
+.app svg {
+  display: block; flex: none;
+  width: 28px; height: 28px;
+  width: min(28px, calc((100cqi - 5 * var(--app-gap)) / 6 * 28 / 60));
+  height: min(28px, calc((100cqi - 5 * var(--app-gap)) / 6 * 28 / 60));
+}
+.app-miro { background: #ffd02f; }
+
+/* Digital products (Gumroad): a quiet tinted surface, not the heaviest object on the page */
+.tile-gumroad { background: var(--surface-sunken); border: 1px solid var(--border); }
+/* Three equal portrait cards (4:5), fanned out but not overlapping, so every
+   card keeps the same visible padding.
+   Top padding = 32px clear gap under the heading (the raised and tilted cards
+   reach up into it). Bottom padding = the arrow circle (44px) plus the same
+   space above it as below it (--fab-space, measured from the tile's edge, so
+   minus the tile padding), plus 10px because the tilted cards' corners reach
+   about 10px below their row. */
+.products {
+  flex: 1;
+  display: grid;
+  /* 126px minimum = longest word ("Whiteboarding", 91px) + 16px padding + 1px border each side */
+  grid-template-columns: repeat(3, minmax(0, clamp(126px, 13vw, 160px)));
+  justify-content: center;
+  align-content: end;
+  align-items: stretch;
+  gap: var(--space-16);
+  padding-top: var(--space-32);
+  padding-bottom: calc(2 * var(--fab-space) + 44px + 10px - var(--tile-pad));
+}
+.product {
+  display: flex; flex-direction: column; gap: 10px;
+  width: 100%; min-width: 0;
+  aspect-ratio: 4 / 5;
+  padding: var(--space-16);
+  border-radius: var(--radius-sm);
+  background: var(--tint);
+  color: var(--text-primary);
+  border: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent);
+  box-shadow: var(--shadow-card);
+  transition: transform .4s ease;
+}
+.product .glyph { font-family: var(--font-display); font-size: var(--text-h3); line-height: 1; }
+.product .name {
+  font-size: var(--text-caption); font-weight: 600; line-height: 1.3;
+  hyphens: auto; overflow-wrap: break-word;
+}
+.product .price {
+  margin-top: auto; align-self: flex-start;
+  font-size: var(--text-caption); font-weight: 600;
+  padding: 2px 10px; border-radius: 999px;
+  background: var(--surface); color: var(--text-primary);
+}
+/* Each card opens its own product page: it sits above the tile's store link,
+   and its name link covers the whole card. The title and arrow still open the store. */
+.product { position: relative; z-index: 3; }
+.product a { text-decoration: none; }
+.product a::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-sm); }
+.product a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.product a:focus-visible { outline: none; }
+.product a:focus-visible::after { outline: 2px solid var(--focus); outline-offset: 4px; }
+.product:nth-child(1) { transform: rotate(-8deg); }
+.product:nth-child(2) { transform: translateY(-16px); }
+.product:nth-child(3) { transform: rotate(8deg); }
+.tile-gumroad:hover .product:nth-child(1) { transform: rotate(-11deg) translateX(-6px); }
+.tile-gumroad:hover .product:nth-child(2) { transform: translateY(-26px); }
+.tile-gumroad:hover .product:nth-child(3) { transform: rotate(11deg) translateX(6px); }
+
+/* Phones: cards become a simple list so names stay readable.
+   Names use the same list style as the Medium articles (Body, 500). */
+@media (max-width: 599px) {
+  .products { grid-template-columns: 1fr; gap: var(--space-8); padding: 0; }
+  .product .name { font-size: var(--text-body); font-weight: 500; line-height: 1.6; }
+  .product {
+    flex-direction: row; align-items: center; gap: var(--space-16);
+    aspect-ratio: auto; min-height: 60px; padding: var(--space-12) var(--space-16);
+    transform: none !important;
+  }
+  /* Glyph, name and price share one centre line in every row */
+  .product .glyph { flex: none; width: 2.6em; font-size: var(--text-h4); }
+  .product .price { margin: 0 0 0 auto; align-self: center; }
+}
+
+/* Experiments */
+.tile-vibe { background: var(--surface-tint-2); }
+.tile-vibe h3 { margin-top: auto; max-width: 8ch; }
+.code-glyph {
+  position: absolute; top: var(--space-12); right: 20px;
+  font-family: var(--font-display); font-size: var(--text-h2); line-height: 1;
+  opacity: .25;
+}
+
+/* Off-screen */
+.tile-me { background: var(--surface-tint-3); }
+.tile-me h3 { margin-top: auto; order: 1; }   /* title at the bottom, under the emoji, on tablets and up */
+.emoji-row { display: flex; }
+.emoji-row span {
+  display: grid; place-items: center;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--surface-tint-3);
+  font-size: var(--text-h4);
+}
+.emoji-row span + span { margin-left: -10px; }
+
+/* =========================================================
+   5f. FOOTER
+   ========================================================= */
+.site-footer {
+  background: var(--surface-inverse);
+  color: var(--text-inverse);
+  border-top: 1px solid var(--border-inverse);
+}
+.site-footer :focus-visible { outline-color: var(--focus-inverse); }
+.site-footer .t-secondary { color: var(--text-inverse-secondary); }
+
+.footer-top { padding-block: var(--space-48) var(--space-64); }   /* 48px above the "Let's talk" line */
+.footer-eyebrow { color: var(--text-inverse); margin-bottom: var(--space-32); }
+
+.footer-email {
+  display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-16) clamp(12px, 2vw, 28px);
+  text-decoration: none;
+}
+/* The email is the page's closing line, so it takes the accent, like the
+   closing phrase of the hero headline */
+.footer-email .h3 { overflow-wrap: anywhere; color: var(--accent-inverse); }
+.footer-email .circle-btn {
+  width: 48px; height: 48px;
+  border-color: var(--text-inverse-secondary);
+}
+.footer-email .circle-btn svg { width: 40%; height: 40%; }
+.footer-email:hover .circle-btn {
+  background: var(--accent-inverse);
+  border-color: var(--accent-inverse);
+  color: var(--surface-inverse);
+}
+
+.footer-bottom { border-top: 1px solid var(--border-inverse); }
+.footer-bar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--space-16) var(--space-32);
+  padding-block: var(--space-24);
+}
+.footer-nav { display: flex; flex-wrap: wrap; gap: 0 var(--space-32); }
+/* Footer links use the H6 label style (13px, 600, uppercase, +0.08em) */
+.footer-nav a {
+  display: inline-flex; align-items: center; gap: var(--space-4); min-height: 44px;
+  font-size: var(--text-h6); font-weight: 600; line-height: 1.4;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: none; text-underline-offset: 6px;
+}
+.footer-nav a:hover { text-decoration: underline; }
+/* Medium and Gumroad sit at the far end of the row (on phones they stay in the grid) */
+.footer-bar > nav { flex: 1; }
+.footer-nav .footer-push { margin-left: auto; }
+
+/* The icons sit centred in 44px targets; the negative margin lines the
+   icons themselves up with the text edges above them */
+.socials { display: flex; gap: var(--space-4); margin-inline: -11px; }
+.socials a {
+  display: grid; place-items: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  transition: background-color .2s;
+}
+.socials a:hover { background: color-mix(in srgb, var(--text-inverse) 12%, transparent); }
+.socials svg { width: 22px; height: 22px; }
+
+.copyright { padding-bottom: var(--space-32); color: var(--text-inverse-secondary); font-size: var(--text-caption); }
+
+/* =========================================================
+   6. CASE STUDY PAGES (case-study.html template, primetrack.html)
+   ========================================================= */
+.case {
+  padding-bottom: var(--section-pad);
+  /* Body text on case studies: 15px, the nav size (phones 14) */
+  font-size: var(--text-small);
+  line-height: 1.7;
+  /* The arrow used by every case-study diagram */
+  --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 16'%3E%3Cpath d='M1 8h16M12 3l5 5-5 5' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.back-link {
+  display: inline-flex; align-items: center; gap: var(--space-8);
+  min-height: 44px; margin-top: var(--space-32);
+  font-weight: 600; color: var(--text-secondary); text-decoration: none;
+}
+.back-link:hover { color: var(--text-primary); text-decoration: underline; text-underline-offset: 4px; }
+.back-link svg { width: 18px; height: 18px; }
+
+.case-hero { padding-top: var(--space-48); }
+/* A label line above the title, in grey like every label */
+.case-eyebrow {
+  font-size: var(--text-h6); font-weight: 600; line-height: 1.4;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary);
+}
+/* The page title uses the H1 display style, as in the home hero */
+/* Case-study titles: the H1 display style, a step smaller (40–80px) so a long
+   sentence-title doesn't overpower the page */
+.case-title { margin-top: var(--space-16); font-size: clamp(2.5rem, 6.4vw, 5rem); }
+/* The line under the title uses the Lead size (18px), so it supports the
+   title instead of competing with it */
+.case-lede { margin-top: var(--space-24); font-size: var(--text-h5); line-height: 1.6; color: var(--text-secondary); }
+.case-hero .tags { margin-top: var(--space-24); }
+.case-hero .tags li { background: var(--surface-sunken); }
+
+.case-meta {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-24);
+  margin: var(--space-48) 0 0; padding-block: var(--space-24);
+  border-block: 1px solid var(--border);
+}
+.case-meta dd { margin: var(--space-4) 0 0; font-weight: 600; }
+
+/* Password dialog for a locked case study (script.js). It opens from the Work
+   card, and on the published password page (site-tools/publish.ps1). */
+.lock-dialog {
+  width: min(420px, calc(100vw - 32px));
+  padding: 0; border: 0; border-radius: var(--radius-md);
+  background: var(--surface); color: var(--text-primary);
+  box-shadow: var(--shadow-raised);
+}
+.lock-dialog::backdrop { background: rgb(23 22 29 / .5); backdrop-filter: blur(4px); }
+.lock-form { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-12); padding: var(--space-24); }
+.lock-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); margin: -10px -12px 0 0; }
+.lock-head h2 { display: flex; align-items: center; gap: var(--space-8); }
+.lock-head h2 svg { width: 18px; height: 18px; flex: none; }
+.lock-text { margin-bottom: var(--space-8); font-size: var(--text-small); color: var(--text-secondary); }
+.lock-row { display: flex; gap: var(--space-8); }
+.lock-row input {
+  flex: 1; min-width: 0; min-height: 48px; padding: 0 var(--space-16);
+  font: inherit; font-size: var(--text-body); color: var(--text-primary);
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: 999px;
+}
+.lock-row .lock-submit {
+  min-height: 48px; padding: 0 var(--space-24);
+  font: inherit; font-size: var(--text-small); font-weight: 600;
+  color: var(--surface-page); background: var(--text-primary);
+  border: 0; border-radius: 999px; cursor: pointer;
+}
+.lock-row .lock-submit:hover { background: color-mix(in srgb, var(--text-primary) 85%, var(--surface-page)); }
+.lock-row .lock-submit:disabled { opacity: .6; cursor: progress; }
+.lock-error { font-size: var(--text-small); font-weight: 600; color: #a8261b; }   /* 6.9:1 on white */
+.lock-help { font-size: var(--text-small); color: var(--text-secondary); }
+.lock-help a { color: var(--text-primary); text-underline-offset: 3px; }
+
+/* Cover: the project's tint with the grid texture, screenshot frame inside */
+.case-cover {
+  --grid-line: color-mix(in srgb, var(--text-primary) 7%, transparent);
+  margin: var(--space-48) 0 0;
+  padding: clamp(24px, 5vw, 64px) clamp(24px, 5vw, 64px) 0;
+  border-radius: var(--radius-lg);
+  background-color: var(--tint, var(--surface-tint-1));
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  overflow: hidden;
+}
+.case-cover-frame {
+  height: clamp(260px, 45vw, 560px);
+  margin-bottom: -24px;
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+  border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent);
+  border-bottom: 0;
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: var(--shadow-shot);
+}
+.case-cover-frame img { width: 100%; height: auto; }
+.case-cover-frame.has-image { height: auto; margin-bottom: 0; }
+
+/* Story sections -------------------------------------------------------
+   Written for a hiring manager who skims. One system, used the same way on
+   every case study.
+   TYPE: six sizes, all from the site scale
+   · Section titles: H2 in Instrument Serif. The serif is only used for the
+     page title and the section titles; everything else is Google Sans.
+   · Sub-headings and design decisions: class="h4" (22px, phones 20)
+   · Titles of cards, cells, points and personas: class="h5" (18px, phones 17)
+   · Lead, 18px: the line under the page title, the lesson, the feedback
+   · Body text: 15px, the nav size (phones 14), in the secondary colour
+   · Labels: class="h6" (13px capitals). Stat values: the H2 size
+   COLOUR: all from the theme, each with one job
+   · Accent: numbers, icons, bullets, eyebrow labels, stat values
+   · The project's tint (lilac): highlights and PrimeTrack itself
+   · Butter: problems · Mint: results · Sunken grey: reflection and notes
+   · Dark: what people said
+   ICONS: outline, 2px stroke, round ends, in the accent colour: 20px beside
+   a title, 24px inside a persona badge. Cards and tables have no icons.
+   Everything spans the full width of the page. */
+.case-section { padding-top: var(--section-pad); color: var(--text-secondary); }
+.case-glance { padding-top: var(--space-64); }
+/* Headings, bold words and table row names stay in the primary colour */
+:where(.case-section) :where(h2, h3, h4, .h4, .h5, strong, th) { color: var(--text-primary); }
+.case-section strong { font-weight: 600; }
+.section-num { color: var(--text-secondary); }
+
+/* Icons beside a title are black like the title; icons beside a grey
+   label or note are grey (see the result box, persona boxes and notes) */
+.cs-icon { display: block; width: 20px; height: 20px; color: var(--text-primary); }
+.cs-note > .cs-icon, .flow-result .cs-icon { color: var(--text-secondary); }
+
+/* An icon beside the title, the text under the title (cells, points, notes) */
+.cs-cell, .cs-points li, .cs-note {
+  display: grid; grid-template-columns: 20px minmax(0, 1fr);
+  column-gap: var(--space-12); row-gap: var(--space-8);
+  align-content: start;
+}
+.cs-cell > .cs-icon, .cs-points li > .cs-icon, .cs-note > .cs-icon { margin-top: 3px; }
+.cs-cell > :not(.cs-icon), .cs-points li > :not(.cs-icon), .cs-note > :not(.cs-icon) { grid-column: 2; }
+
+/* Cards: one anatomy everywhere: a title (H5), then text. .cs-grid holds
+   three per row; cols-2 and cols-4 change that. Fewer columns on tablets
+   and phones (see the end of this section). */
+.cs-grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap);
+}
+.cs-grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cs-grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.cs-card {
+  position: relative;
+  display: flex; flex-direction: column; gap: var(--space-8);
+  padding: var(--space-32);
+  border-radius: var(--radius-md);
+  background: var(--surface); border: 1px solid var(--border);
+}
+
+/* Steps (testing rounds), joined by arrows with room on both sides */
+.cs-grid.is-process { column-gap: var(--space-48); }
+.cs-grid.is-process > * + *::before {
+  content: "";
+  position: absolute; top: 50%; right: 100%;
+  width: var(--space-48); height: var(--space-48);
+  transform: translateY(-50%);
+  background: var(--text-secondary);
+  -webkit-mask: var(--arrow) center / 16px 13px no-repeat;
+  mask: var(--arrow) center / 16px 13px no-repeat;
+}
+
+/* Cell panels: one block split into cells by hairlines (at a glance, the
+   constraints, the scope). Columns on laptops, rows on tablets, stacked on
+   phones, so the cells always fill the space. is-tint colours the whole
+   panel; a single cell can be is-tint too (the outcome). */
+.cs-cells {
+  --cell-bg: var(--surface);
+  --cell-line: var(--border);
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--cell-line); border-radius: var(--radius-lg);
+  background: var(--cell-line);
+  overflow: hidden;
+}
+.cs-cells.cols-1 { grid-template-columns: 1fr; }
+.cs-cells.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.cs-cells.is-tint {
+  --cell-bg: var(--tint, var(--surface-tint-1));
+  --cell-line: color-mix(in srgb, var(--text-primary) 12%, var(--tint, var(--surface-tint-1)));
+}
+.cs-cell { padding: var(--space-32); background: var(--cell-bg); }
+.cs-cell.is-tint { background: var(--tint, var(--surface-tint-1)); }
+/* Module names as chips; "saved for later" as an outline chip */
+.cs-cell .tags { align-self: start; align-items: flex-start; }
+.cs-cell .tags li { background: var(--tint, var(--surface-tint-1)); }
+.cs-cell .tags.is-later li { padding: 3px 11px; background: transparent; border: 1px dashed var(--border-strong); }
+
+/* Panels: a block of colour holding a sub-heading (H4) and a list of
+   points. is-butter for problems, is-mint for results, plain (sunken grey)
+   for reflection. */
+.cs-panel {
+  padding: clamp(var(--space-24), 4vw, var(--space-48));
+  border-radius: var(--radius-lg);
+  background: var(--surface-sunken);
+}
+.cs-panel.is-butter { background: var(--surface-tint-3); }
+.cs-panel.is-mint { background: var(--surface-tint-2); }
+.cs-panel > * + * { margin-top: var(--space-24); }
+
+/* Points: an icon, a title (H5) and its text, with a hairline above each */
+.cs-points {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-24) var(--space-48);
+}
+.cs-points.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--space-32); }
+.cs-points li {
+  padding-top: var(--space-16);
+  border-top: 1px solid color-mix(in srgb, var(--text-primary) 14%, transparent);
+}
+/* A rule between rows of points, never above the first row */
+.cs-points > li:nth-child(-n+2),
+.cs-points.cols-3 > li:nth-child(3) { padding-top: 0; border-top: 0; }
+/* A single point spans the whole panel (Tellora's one lesson) */
+.cs-points > li:only-child { grid-column: 1 / -1; }
+
+/* Who I designed for: one card per person, the same facts on each.
+   Each card is four rows (the person, what they relied on, needs, pain
+   points) that line up with the cards beside it. Needs sit on mint and pain
+   points on butter, the same colours as results and problems elsewhere.
+   On tablets the person sits beside the facts. */
+.persona-group > * + * { margin-top: var(--space-16); }
+.persona-grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap);
+}
+.persona-grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.persona {
+  display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: var(--space-16);
+  padding: var(--space-32);
+  border-radius: var(--radius-md);
+  background: var(--surface); border: 1px solid var(--border);
+}
+.persona-head {
+  display: flex; align-items: flex-start; gap: var(--space-16);
+  padding-bottom: var(--space-24);
+  border-bottom: 1px solid var(--border);
+}
+/* Badges: a black icon in a grey circle (white on tinted cards), used on
+   persona cards and on the cards in Working with developers and Impact */
+.persona-badge, .cs-badge {
+  display: grid; place-items: center; flex: none;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--surface-sunken); color: var(--text-primary);
+}
+.persona-badge svg, .cs-badge svg { width: 24px; height: 24px; }
+.cs-card > .cs-badge { margin-bottom: var(--space-8); }
+.persona-who { min-width: 0; }
+.persona-who p { margin-top: 2px; text-wrap: balance; }
+/* How I know them: a small chip */
+.persona-tag {
+  display: inline-block; margin-top: var(--space-8);
+  padding: 2px var(--space-12); border-radius: 999px;
+  background: var(--surface-sunken); color: var(--text-primary);
+  font-size: var(--text-caption); font-weight: 600; line-height: 1.6;
+}
+/* The facts: a grey label (H6) above content in the primary colour */
+.persona-body { grid-row: span 3; display: grid; grid-template-rows: subgrid; row-gap: var(--space-16); margin: 0; }
+.persona-body dd { margin: 0; color: var(--text-primary); }
+.persona-uses { display: flex; flex-wrap: wrap; align-items: center; align-content: start; gap: var(--space-8) var(--space-12); }
+.persona-uses .tags li { background: var(--surface-sunken); }
+.persona-box {
+  display: grid; align-content: start; gap: var(--space-8);
+  padding: var(--space-16);
+  border-radius: var(--radius-sm);
+}
+.persona-box.is-needs { background: var(--surface-tint-2); }
+.persona-box.is-pains { background: var(--surface-tint-3); }
+.persona-box dt { display: flex; align-items: center; gap: var(--space-8); }
+.persona-box dt .cs-icon { width: 16px; height: 16px; color: var(--text-secondary); }
+/* Every case study: the cover keeps the project's own colour (as on its Work
+   card), while highlights inside the story use one lilac (--surface-highlight),
+   so lilac = highlight, mint = result and butter = problem on every page */
+.case-body { --tint: var(--surface-highlight); }
+
+/* Short lists with grey dots */
+.cs-list { display: grid; gap: var(--space-4); }
+.cs-list li { position: relative; padding-left: var(--space-16); }
+.cs-list li::before {
+  content: ""; position: absolute; left: 1px; top: calc(0.85em - 3px);
+  width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary);
+}
+
+/* Impact as one outcome statement in the display serif (class="h3
+   cs-outcome"), the same pattern as the About statement on the home page:
+   the key facts in <strong> show in black, the words around them in grey */
+.cs-outcome { color: var(--text-secondary); line-height: 1.25; text-wrap: balance; }
+.case-section .cs-outcome strong { font-weight: inherit; color: var(--text-primary); }
+
+/* Impact as numbers (used by the case-study.html template): three quiet
+   grey cards with the same padding, gap and text size
+   as every other card. The number is in the display serif at the
+   section-title size, with its label (body text, grey) under it; both are
+   centred. */
+.cs-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
+.cs-stat {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: var(--space-8);
+  padding: var(--space-32);
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  text-align: center; text-wrap: balance;
+}
+.cs-value {
+  display: block;
+  font-family: var(--font-display); font-weight: 400;
+  font-size: var(--text-h2); line-height: 1; letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+/* The lesson: the project's tint with a black rule, in the Lead size */
+.case-callout {
+  padding: var(--space-24) var(--space-32);
+  border-left: 4px solid var(--text-primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--tint, var(--surface-tint-1));
+  color: var(--text-primary);
+  font-size: var(--text-h5); line-height: 1.55;
+}
+
+/* Feedback: the inverse of the page (dark in light mode, cream in dark mode),
+   in the Lead size */
+.case-quote {
+  padding: clamp(var(--space-24), 4vw, var(--space-48));
+  border-radius: var(--radius-lg);
+  background: var(--surface-quote);
+  border: 1px solid var(--border-quote);
+  color: var(--text-quote);
+  font-size: var(--text-h5); line-height: 1.55;
+}
+.case-quote .h6 { margin-bottom: var(--space-12); color: var(--text-quote-secondary); }
+
+/* Notes: a quiet box with an icon (how the results were measured, how I used AI) */
+.cs-note {
+  padding: var(--space-16) var(--space-24);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+}
+
+/* Tables: column labels in the H6 style, a hairline under each row.
+   On phones each row stacks (see the end of this section); ARIA roles in the
+   markup keep the table readable to screen readers when that happens. */
+.case-table { width: 100%; border-collapse: collapse; }
+.case-table th, .case-table td {
+  padding: var(--space-16) var(--space-24) var(--space-16) 0;
+  border-bottom: 1px solid var(--border);
+  text-align: left; vertical-align: top;
+}
+.case-table :is(th, td):last-child { padding-right: 0; }
+.case-table thead th {
+  padding-top: 0;
+  font-size: var(--text-h6); font-weight: 600; line-height: 1.4;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary);
+}
+.case-table tbody th { font-weight: 600; }
+
+/* Use cases: one per card. A label and title, then Before and After (48px
+   apart), then one mint Result box. Steps are outlined boxes; the
+   PrimeTrack step is highlighted in the project's tint. Before and After
+   sit in rows on laptops, side by side on tablets, stacked on phones. */
+.case-flow {
+  display: grid; gap: var(--space-32);
+  padding: clamp(var(--space-24), 3vw, var(--space-32));
+  border-radius: var(--radius-lg);
+  background: var(--surface); border: 1px solid var(--border);
+}
+.flow-head { display: grid; justify-items: start; gap: var(--space-8); }
+.flow-row { display: grid; align-content: start; gap: var(--space-12); }
+.case-flow > .flow-row + .flow-row { margin-top: var(--space-16); }
+/* The result: a label with a check, then one line, like the persona boxes */
+.flow-result {
+  display: grid; gap: var(--space-8);
+  padding: var(--space-16) var(--space-24);
+  border-radius: var(--radius-sm);
+  background: var(--surface-tint-2);
+  color: var(--text-primary);
+}
+.flow-result .h6 { display: flex; align-items: center; gap: var(--space-8); }
+.flow-result .cs-icon { width: 16px; height: 16px; }
+.flow li, .flow-box {
+  position: relative;
+  display: grid; place-content: center;
+  min-height: 56px; padding: var(--space-12) var(--space-16);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--surface-page); color: var(--text-primary);
+  text-align: center; font-weight: 500; line-height: 1.4;
+  text-wrap: balance;   /* "Tech / fixes it", never "Tech fixes / it" */
+}
+.flow li.is-key, .flow-box.is-key {
+  border: 2px solid var(--text-primary);
+  background: var(--tint, var(--surface-tint-1));
+  font-weight: 600;
+}
+
+/* Steps in a row, any number of them, each the same width.
+   The arrows sit in the gaps, with room on both sides. */
+.flow {
+  --flow-gap: var(--space-48);
+  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--flow-gap);
+}
+.flow li + li::before {
+  content: "";
+  position: absolute; top: 50%; right: 100%;
+  width: var(--flow-gap); height: var(--space-32);
+  transform: translateY(-50%);
+  background: var(--text-secondary);
+  -webkit-mask: var(--arrow) center / 18px 14px no-repeat;
+  mask: var(--arrow) center / 18px 14px no-repeat;
+}
+
+/* One request fanning out to three teams (Scenario 2, before) */
+.fan-row { display: grid; grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr); align-items: center; align-content: start; }
+.fan-targets { position: relative; display: grid; gap: var(--space-12); }
+.fan-targets .flow-box { min-height: 48px; padding-block: var(--space-8); }
+.fan-lines { width: 64px; height: 168px; color: var(--text-secondary); }
+
+/* Process (case-study.html template): a numbered label in front of each step */
+.case-steps { display: grid; gap: var(--space-24); counter-reset: step; }
+.case-steps li {
+  display: grid; grid-template-columns: 3rem 1fr; gap: var(--space-8) var(--space-16);
+  padding-top: var(--space-24); border-top: 1px solid var(--border);
+  counter-increment: step;
+}
+.case-steps li::before {
+  content: counter(step, decimal-leading-zero);
+  grid-row: span 2;
+  font-size: var(--text-h5); font-weight: 600; line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+/* Screenshots */
+.case-figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.case-figure { margin: 0; }
+.case-figure .frame {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.case-figure img { width: 100%; height: 100%; object-fit: cover; }
+.case-figure figcaption { margin-top: var(--space-12); }
+/* A screen grid shaped like the product screenshots (6:5), showing each from the top */
+.case-figures.is-screens .frame { aspect-ratio: 6 / 5; }
+/* PrimeTrack's screens are exported at 3:2, so its grid shows them whole */
+.case-figures.is-screens.is-3x2 .frame { aspect-ratio: 3 / 2; }
+/* A taller screen (exported about 9:10) shares a row with another one, so both show whole */
+.case-figures.is-screens .case-figure.is-tall .frame { aspect-ratio: 9 / 10; }
+.case-figures.is-screens img { object-position: top left; }
+/* One wide screenshot: a 16:9 slot until the image is added, then the
+   image sets the height, so it is never cropped */
+.case-figure.is-wide .frame { aspect-ratio: 16 / 9; }
+.case-figure.is-wide .frame:has(> img) { aspect-ratio: auto; }
+.case-figure.is-wide img { height: auto; }
+
+/* One rhythm inside every section:
+   number → title 12 · title → content 24 · text → text 16 · around cards,
+   cells, diagrams, screenshots and notes 32 · before a sub-section or a
+   panel 64 · sub-section → its content 24 · design decisions 64 + a rule + 64. */
+.case-section > * + * { margin-top: var(--space-16); }
+.case-section > * + :where(.cs-grid, .cs-cells, .cs-stats, .persona-group, .case-table, .case-flow, .case-figure, .case-figures, .case-callout, .case-quote, .cs-note, .case-steps),
+.case-section > :where(.cs-grid, .cs-cells, .cs-stats, .persona-group, .case-table, .case-flow, .case-figure, .case-figures, .case-callout, .case-quote, .cs-note, .case-steps, .cs-panel) + * {
+  margin-top: var(--space-32);
+}
+.case-section > * + :where(h3, .cs-panel, .case-decision) { margin-top: var(--space-64); }
+.case-section > .persona-group + .persona-group { margin-top: var(--space-48); }
+.case-section > .section-num + h2 { margin-top: var(--space-12); }
+.case-section > h2 + * { margin-top: var(--space-24); }
+.case-glance > h2 + * { margin-top: var(--space-16); }
+.case-section > h3 + * { margin-top: var(--space-24); }
+.case-section > h2 + .case-decision { margin-top: var(--space-48); }
+.case-section > .case-decision + .case-decision {
+  margin-top: var(--space-64); padding-top: var(--space-64);
+  border-top: 1px solid var(--border);
+}
+.case-decision > * + * { margin-top: var(--space-16); }
+.case-decision > * + .case-figure { margin-top: var(--space-32); }
+
+/* Next case study: one big link in the next project's colour */
+.next-case {
+  display: flex; flex-direction: column; gap: var(--space-8);
+  margin-top: var(--space-96);
+  padding: clamp(24px, 4vw, 48px);
+  border-radius: var(--radius-lg);
+  background-color: var(--tint, var(--surface-tint-1));
+  text-decoration: none;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.next-case:hover { transform: translateY(-4px); box-shadow: var(--shadow-raised); }
+.next-case:hover .next-title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.12em; }
+.next-title { max-width: 24ch; }
+
+/* Reading progress: a thin accent line under the header fills as you
+   scroll a case study, so you always know how far through you are.
+   Browsers without scroll-linked animation simply don't show it. */
+@supports (animation-timeline: scroll()) {
+  body:has(.case) .site-header::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+    background: var(--text-primary);
+    transform-origin: 0 50%; transform: scaleX(0);
+    animation: read-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+  @keyframes read-progress { to { transform: scaleX(1); } }
+}
+
+/* Tablets and phones: three-card rows and persona cards stack, four-card
+   rows become 2 × 2, cell panels become rows, and the steps and scenarios
+   turn vertical so nothing gets squeezed */
+@media (max-width: 1023px) {
+  .cs-grid, .cs-cells, .cs-cells.cols-4, .persona-grid, .persona-grid.cols-2, .cs-points.cols-3 { grid-template-columns: 1fr; }
+  .cs-points.cols-3 > li:nth-child(n+2) {
+    padding-top: var(--space-16);
+    border-top: 1px solid color-mix(in srgb, var(--text-primary) 14%, transparent);
+  }
+  .cs-grid.cols-2, .cs-grid.cols-3, .cs-grid.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Steps in one column: the arrows point down, with room above and below */
+  .cs-grid.is-process { row-gap: var(--space-48); }
+  .cs-grid.is-process > * + *::before {
+    width: var(--space-48); height: var(--space-48);
+    top: auto; right: auto; bottom: 100%; left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+  }
+
+  /* Scenario steps stack, the arrows point down with room around them */
+  .flow { grid-auto-flow: row; grid-auto-columns: auto; }
+  .flow li + li::before {
+    width: var(--flow-gap); height: var(--flow-gap);
+    top: auto; right: auto; bottom: 100%; left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+  }
+  /* Scenario 2: the request, an arrow down, then the three teams */
+  .fan-row { grid-template-columns: 1fr; gap: var(--space-48); }
+  .fan-lines { display: none; }
+  .fan-targets::before {
+    content: "";
+    position: absolute; bottom: 100%; left: 50%;
+    width: var(--space-48); height: var(--space-48);
+    transform: translateX(-50%) rotate(90deg);
+    background: var(--text-secondary);
+    -webkit-mask: var(--arrow) center / 18px 14px no-repeat;
+    mask: var(--arrow) center / 18px 14px no-repeat;
+  }
+}
+/* Tablets only: each cell is a row (icon, title, then the text beside it),
+   each persona puts the person beside the facts, Before and After sit side
+   by side, and the numbers step down to the H3 size so all three stay on
+   one row */
+@media (min-width: 600px) and (max-width: 1023px) {
+  .cs-cell { grid-template-columns: 20px minmax(0, 11rem) minmax(0, 1fr); }
+  .cs-cell > :not(.cs-icon, h3, h4) { grid-column: 3; grid-row: 1; padding-left: var(--space-12); }
+
+  .persona {
+    grid-row: auto; grid-template-rows: none;
+    grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); column-gap: var(--space-32);
+  }
+  .persona-head {
+    flex-direction: column; gap: var(--space-12);
+    padding: 0 var(--space-32) 0 0;
+    border-bottom: 0; border-right: 1px solid var(--border);
+  }
+  .persona-body { grid-row: auto; grid-template-rows: none; }
+
+  .case-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-32); }
+  .case-flow > :not(.flow-row) { grid-column: 1 / -1; }
+  .case-flow > .flow-row + .flow-row { margin-top: 0; }
+
+  /* Two steps (cols-2 is-process, Tellora) stay side by side, so their
+     arrow keeps pointing right */
+  .cs-grid.cols-2.is-process > * + *::before {
+    top: 50%; right: 100%; bottom: auto; left: auto;
+    transform: translateY(-50%);
+  }
+}
+/* The impact cards stack on tablets and phones, so each label stays short */
+@media (max-width: 1023px) {
+  .cs-stats { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .case-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 599px) {
+  .case-figures { grid-template-columns: 1fr; }
+  .cs-grid.cols-2, .cs-grid.cols-3, .cs-grid.cols-4, .cs-points { grid-template-columns: 1fr; }
+  /* Points stack in one column, so the rule returns above the second point */
+  .cs-points > li:nth-child(2) {
+    padding-top: var(--space-16);
+    border-top: 1px solid color-mix(in srgb, var(--text-primary) 14%, transparent);
+  }
+
+  /* Tables: each row becomes a small block, every value labelled */
+  .case-table, .case-table tbody, .case-table tr, .case-table th, .case-table td { display: block; }
+  .case-table thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  .case-table tr { padding: var(--space-16) 0; border-bottom: 1px solid var(--border); }
+  .case-table th, .case-table td { padding: 0; border: 0; }
+  .case-table tr > * + * { margin-top: var(--space-8); }
+  .case-table td[data-label]::before {
+    content: attr(data-label); display: block; margin-bottom: 2px;
+    font-size: var(--text-h6); font-weight: 600; line-height: 1.4;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary);
+  }
+
+}
+
+/* Variants of the shared blocks, first used on tellora-teacher-portal.html.
+   None of them changes a block that PrimeTrack or Tellora already uses.
+   - .flow-box.is-missing: a use case with nothing "before"; one muted,
+     dashed box runs across the row instead of steps
+   - .case-quote.is-small: a persona's own words; the same inverse card as
+     the feedback, smaller
+   - .persona-grid.cols-1: one person in a group; on laptops the card runs
+     the full width, the person beside the facts, Needs beside Pain points
+   - .cs-cells.cols-2.is-change: one version turning into the next; an arrow
+     sits on the divider between the two cells (pointing down when stacked)
+   - a table inside a design decision gets the same space as a screenshot */
+.flow-box.is-missing {
+  border-style: dashed;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.case-quote.is-small {
+  margin-left: 0; margin-right: 0; margin-bottom: 0;
+  padding: var(--space-24) var(--space-32);
+  border-radius: var(--radius-md);
+}
+
+.persona-grid.cols-1 { grid-template-columns: 1fr; }
+@media (min-width: 1024px) {
+  .persona-grid.cols-1 > .persona {
+    grid-row: auto; grid-template-rows: none;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); column-gap: var(--space-32);
+  }
+  .persona-grid.cols-1 .persona-head {
+    flex-direction: column; gap: var(--space-12);
+    padding: 0 var(--space-32) 0 0;
+    border-bottom: 0; border-right: 1px solid var(--border);
+  }
+  .persona-grid.cols-1 .persona-body {
+    grid-row: auto; grid-template-rows: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-16);
+  }
+  .persona-grid.cols-1 .persona-uses { grid-column: 1 / -1; }
+}
+
+.cs-cells.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cs-cells.is-change > .cs-cell + .cs-cell { position: relative; }
+.cs-cells.is-change > .cs-cell + .cs-cell::before,
+.cs-cells.is-change > .cs-cell + .cs-cell::after {
+  content: "";
+  position: absolute; top: 50%; left: 0;
+  width: var(--space-32); height: var(--space-32);
+  transform: translate(-50%, -50%);
+}
+.cs-cells.is-change > .cs-cell + .cs-cell::before {
+  border-radius: 50%;
+  background: var(--cell-bg); border: 1px solid var(--cell-line);
+}
+.cs-cells.is-change > .cs-cell + .cs-cell::after {
+  background: var(--text-secondary);
+  -webkit-mask: var(--arrow) center / 16px 13px no-repeat;
+  mask: var(--arrow) center / 16px 13px no-repeat;
+}
+@media (max-width: 1023px) {
+  .cs-cells.cols-2 { grid-template-columns: 1fr; }
+  .cs-cells.is-change > .cs-cell + .cs-cell::before,
+  .cs-cells.is-change > .cs-cell + .cs-cell::after { top: 0; left: 50%; }
+  .cs-cells.is-change > .cs-cell + .cs-cell::after { transform: translate(-50%, -50%) rotate(90deg); }
+}
+
+.case-decision > * + .case-table,
+.case-decision > .case-table + * { margin-top: var(--space-32); }
+
+@media (max-width: 599px) {
+  .case-quote.is-small { padding: var(--space-24); }
+}
+
+/* =========================================================
+   7. STYLE GUIDE PAGE (style-guide.html)
+   ========================================================= */
+.sg { padding-bottom: var(--section-pad); }
+.sg-hero { padding-top: var(--space-48); }
+.sg-hero h1 { margin-top: var(--space-16); }
+.sg-lede { margin-top: var(--space-24); max-width: 60ch; font-size: var(--text-h5); color: var(--text-secondary); }
+
+.sg-toc { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-top: var(--space-32); }
+.sg-toc a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-16);
+  border-radius: 999px; border: 1px solid var(--border-strong);
+  font-size: var(--text-small); font-weight: 500; text-decoration: none;
+}
+.sg-toc a:hover { background: var(--surface-sunken); }
+
+.sg-section { padding-top: var(--space-96); }
+.sg-note { max-width: 64ch; margin-bottom: var(--space-32); color: var(--text-secondary); }
+
+code {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 0.875em;
+  padding: 2px 6px; border-radius: 6px;
+  background: var(--surface-sunken); color: var(--text-primary);
+}
+
+/* Typefaces */
+.sg-fonts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.sg-font { padding: clamp(24px, 3vw, 40px); border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); }
+.sg-specimen { font-size: var(--text-h1); line-height: 1; margin-bottom: var(--space-24); }
+.sg-specimen-serif { font-family: var(--font-display); }
+.sg-specimen-sans { font-family: var(--font-body); font-weight: 600; letter-spacing: -0.03em; }
+.sg-font h3 { margin-bottom: var(--space-4); }
+.sg-font p + p { margin-top: var(--space-8); }
+
+/* Type scale */
+.sg-scale { margin-top: var(--space-48); }
+.sg-type {
+  display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-24) var(--gap);
+  align-items: center;
+  padding-block: var(--space-32);
+  border-top: 1px solid var(--border);
+}
+.sg-type:last-child { border-bottom: 1px solid var(--border); }
+.sg-type h3 { margin-bottom: var(--space-12); }
+.sg-specs {
+  display: grid; grid-template-columns: auto 1fr; gap: var(--space-4) var(--space-16);
+  margin: 0; font-size: var(--text-small);
+}
+.sg-specs dt { color: var(--text-secondary); }
+.sg-specs dd { margin: 0; overflow-wrap: anywhere; }
+.sg-sample { overflow-wrap: anywhere; }
+
+/* Headline colour rule */
+.sg-demo { padding: clamp(24px, 4vw, 48px); border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); }
+.sg-demo .line { display: block; }
+.sg-rules { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); margin-top: var(--gap); }
+.sg-rule { padding: var(--space-24); border-radius: var(--radius-md); background: var(--surface); border: 1px solid var(--border); }
+.sg-rule h3 { display: flex; align-items: center; gap: var(--space-8); margin-bottom: var(--space-8); }
+.sg-rule p { color: var(--text-secondary); }
+.sg-dot { width: 14px; height: 14px; border-radius: 50%; flex: none; }
+.sg-dot-primary { background: var(--text-primary); }
+.sg-dot-secondary { background: var(--text-secondary); }
+.sg-dot-accent { background: var(--accent); }
+
+/* Colour: light and dark palettes side by side */
+.sg-themes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.sg-theme {
+  padding: clamp(20px, 3vw, 40px);
+  border-radius: var(--radius-lg);
+  background: var(--surface-page); color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+.sg-theme > h3 { margin-bottom: var(--space-24); }
+.sg-group + .sg-group { margin-top: var(--space-32); }
+.sg-group h4 { margin-bottom: var(--space-12); }
+.sg-swatches { display: grid; gap: var(--space-12); }
+.sg-swatch { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: var(--space-12); align-items: center; }
+.sg-chip { width: 44px; height: 44px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--text-primary) 18%, transparent); }
+.sg-swatch-name { display: block; font-size: var(--text-small); font-weight: 600; }
+.sg-swatch-use { display: block; font-size: var(--text-caption); color: var(--text-secondary); }
+.sg-hex { font-family: ui-monospace, Consolas, monospace; font-size: var(--text-caption); color: var(--text-secondary); text-transform: uppercase; }
+.sg-project { padding: var(--space-16); border-radius: var(--radius-md); background: var(--tint); }
+.sg-project p + p { margin-top: var(--space-4); }
+
+.sg-contrast { width: 100%; margin-top: var(--space-32); border-collapse: collapse; font-size: var(--text-small); }
+.sg-contrast caption { margin-bottom: var(--space-12); text-align: left; }
+.sg-contrast th, .sg-contrast td { padding: var(--space-8) var(--space-8) var(--space-8) 0; border-top: 1px solid var(--border); text-align: left; vertical-align: top; }
+.sg-contrast th { font-weight: 500; }
+.sg-contrast .ratio { padding-right: 0; text-align: right; font-weight: 600; white-space: nowrap; }
+
+/* Spacing and shape */
+.sg-space { display: grid; gap: var(--space-12); }
+.sg-space li { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: var(--space-16); align-items: center; font-size: var(--text-small); }
+.sg-bar { height: 12px; border-radius: 6px; background: var(--text-secondary); max-width: 100%; }
+.sg-radii { display: flex; flex-wrap: wrap; gap: var(--gap); margin-top: var(--space-32); }
+.sg-radius { display: grid; place-items: center; width: 120px; height: 96px; background: var(--surface); border: 1px solid var(--border-strong); font-size: var(--text-caption); color: var(--text-secondary); text-align: center; }
+.sg-radii + .sg-note { margin-top: var(--space-48); }
+
+/* Icons: interface icons in the text colour, content icons in Accent */
+.sg-icons { display: flex; flex-wrap: wrap; gap: var(--gap); margin-top: var(--space-24); }
+.sg-icons li {
+  display: grid; justify-items: center; gap: var(--space-8);
+  width: 96px; padding: var(--space-16) var(--space-8);
+  border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-primary); font-size: var(--text-caption); text-align: center;
+}
+.sg-icons svg { width: 24px; height: 24px; }
+.sg-icons span { color: var(--text-secondary); }
+
+/* Accessibility checklist */
+.sg-a11y { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.sg-a11y li { padding: var(--space-24); border-radius: var(--radius-md); background: var(--surface); border: 1px solid var(--border); }
+.sg-a11y h3 { margin: var(--space-4) 0 var(--space-8); }
+.sg-a11y p:not(.h6) { color: var(--text-secondary); }
+
+@media (max-width: 960px) {
+  .sg-themes { grid-template-columns: 1fr; }
+  .sg-type { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .sg-fonts, .sg-rules, .sg-a11y { grid-template-columns: 1fr; }
+  .sg-space li { grid-template-columns: 6.5rem minmax(0, 1fr); }
+}
+
+/* =========================================================
+   8. TABLETS (600–1023px) — one spacing system for mid-size screens
+   Side margin 48–80 · between cards 24 · inside every card 32 ·
+   label → title 16 · title → content 16 · section title → content 48 ·
+   between sections 80–102 (--section-pad). Type sizes: see the tablet tokens at the top.
+   ========================================================= */
+@media (min-width: 600px) and (max-width: 1023px) {
+  .statement { line-height: 1.25; }   /* a multi-line paragraph */
+
+  /* Work: the same padding and gap as the side-project tiles */
+  .projects { gap: var(--gap); }
+  .project { --card-pad: var(--space-32); }
+
+  /* Side projects: every tile sizes to its content (no forced height, so no
+     empty gaps), with the arrow sitting on the same 32px padding line */
+  .bento { grid-auto-rows: auto; }
+  .tile { --tile-pad: var(--space-32); }
+  .tile-vibe h3 { max-width: none; }   /* both titles in the pair wrap the same way */
+
+  /* Footer: links and social icons stay on one line */
+  .footer-nav { column-gap: var(--space-24); }
+
+  /* Case study and style guide: text cards stack instead of squeezing into
+     three narrow columns; project facts sit in two columns (as on phones) */
+  .sg-rules { grid-template-columns: 1fr; }
+  .case-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* =========================================================
+   9. PHONES (under 600px) — one spacing system for small screens
+   Side margin 16 · between cards 16 · inside cards 24 ·
+   label ↔ title 8 · title → content 16 · section title → content 32 ·
+   between sections 80 (--section-pad). Type sizes: see the phone tokens at the top.
+   ========================================================= */
+@media (max-width: 599px) {
+  /* Display type gets a little more line height at small sizes */
+  h1, .h1 { line-height: 1.05; }
+  h2, .h2 { line-height: 1.1; }
+  h3, .h3 { line-height: 1.2; }
+  .statement { line-height: 1.3; }   /* a multi-line paragraph */
+
+  /* Hero tabs: a smaller pill (14px text, 36px tall; 24px is the WCAG minimum) */
+  .tab { min-height: 36px; padding: 0 14px; }
+
+  /* Section heads: the label always sits under the title */
+  .section-head {
+    flex-direction: column; align-items: flex-start; gap: var(--space-8);
+    margin-bottom: var(--space-32); padding-bottom: var(--space-16);
+  }
+  .section-head:has(+ .section-intro) { margin-bottom: var(--space-16); }
+  .section-intro { margin-bottom: var(--space-32); }
+
+  /* Work: the name, then the outcome line (Small, 14px), then the type chips.
+     The head box steps aside (display: contents) so its name and chips can
+     sit on either side of the outcome line. */
+  .projects { gap: var(--gap); }
+  .project { --card-pad: var(--space-24); }
+  .project-head { display: contents; }
+  .project-outcome { order: 1; font-size: var(--text-small); }
+  .project .tags { order: 2; margin-top: var(--space-16); }
+  .project-shot { order: 3; }
+
+  /* About */
+  .xp { margin-top: var(--space-32); }
+
+  /* Side projects: every tile sizes to its content and follows one order:
+     label → 8 → title → 16 → content → 16 → arrow */
+  .bento { grid-auto-rows: auto; }
+  .tile { gap: 0; --tile-pad: var(--space-24); --fab-space: var(--space-16); }
+  .tile > h3 { margin-top: var(--space-8); max-width: none; order: 0; }
+  .tile > :is(.articles, .apps, .products, .emoji-row, .circle-btn) { margin-top: var(--space-16); }
+  .tile > .circle-btn {   /* same space above as below */
+    position: static; align-self: flex-end;
+    margin-top: var(--fab-space); margin-bottom: calc(var(--fab-space) - var(--tile-pad));
+  }
+  /* Tool icons: a smaller gap, so the row of six stays as large as it can */
+  .apps { --app-gap: var(--space-8); }
+
+  /* Footer: links in two even columns, so none ends up alone on a line */
+  .footer-top { padding-bottom: var(--space-48); }
+  .footer-eyebrow { margin-bottom: var(--space-16); }
+  .footer-nav { display: grid; grid-template-columns: repeat(2, max-content); column-gap: var(--space-32); }
+  .footer-nav .footer-push { margin-left: 0; }
+
+  /* Case study and style guide pages (case-study sections keep the
+     80px gap used between every section on the home page) */
+  .sg-section { padding-top: var(--space-64); }
+  .next-case { margin-top: var(--space-64); }
+  /* Case-study cards, cells and the lesson: 24 inside, like every phone card */
+  .cs-card, .cs-cell, .cs-stat, .persona, .case-callout { padding: var(--space-24); }
+}
+
+/* =========================================================
+   10. PRINT / PDF — used to save style-guide.html as a PDF
+   A4 landscape with 10mm side margins = a 1047px-wide page, so the
+   desktop layout is used. Each style-guide section starts on a new page.
+   ========================================================= */
+@media print {
+  @page { size: A4 landscape; margin: 12mm 10mm; }
+  :root { --gutter: 0px; }   /* the page margin replaces the side margin */
+  /* Print colours exactly: swatches, tints and the dark palette */
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .site-header, .site-footer, .skip-link { display: none !important; }
+  .sg { padding-bottom: 0; }
+  .sg-hero { padding-top: 0; }
+  .sg-section { break-before: page; padding-top: 0; }
+  /* Never split a row, card or swatch across two pages */
+  .sg-type, .sg-font, .sg-demo, .sg-rule, .sg-swatch, .sg-project,
+  .sg-contrast tr, .sg-space li, .sg-radius, .sg-icons li, .sg-a11y li { break-inside: avoid; }
+  h2, h3, h4, .section-head, .sg-note { break-after: avoid; }
+}
+
+/* =========================================================
+   Reduced motion
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .project.is-active, .project:hover, .tile.has-circle:hover, .next-case:hover { transform: none; }
+}
