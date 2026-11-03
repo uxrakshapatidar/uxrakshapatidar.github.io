@@ -8,12 +8,16 @@
 // slug     short name used in the link: case-study.html?project=slug
 // title    the project's name: the card's title
 // company  who it was for: the card's first chip, with a briefcase
+// tool     what it was built with, if there's no company: the first chip, with a tool icon
 // type     1–2 words on the kind of product: the card's other chips
 // color    the project's brand colour; the card gets a soft tint of it
 //          (leave "" to use tint 1/2/3 instead: lilac, mint, butter)
 // tags     2–3 tags for the case-study page; put your role here, e.g. "UX Designer"
 // href   optional: link to a finished case-study page instead of the
 //        template (e.g. "primetrack.html")
+// live   optional: for a project with no case-study page yet. The whole card
+//        opens this live site in a new tab and says "Case study coming soon".
+// group  optional: "ai" puts the card under AI Projects instead of Work.
 // =========================================================
 
 window.PROJECTS = [
@@ -33,7 +37,7 @@ window.PROJECTS = [
     slug: "tellora",
     title: "Tellora",
     company: "UK EdTech startup",
-    type: ["EdTech", "Children's web app"],
+    type: ["SaaS", "Children's web app"],
     outcome: "Redesigning story creation for children who are still learning to read.",
     tags: ["Product design", "EdTech", "Story creation"],
     color: "",
@@ -47,7 +51,7 @@ window.PROJECTS = [
     slug: "tellora-teacher-portal",
     title: "Tellora Teacher Portal",
     company: "UK EdTech startup",
-    type: ["EdTech", "Teacher portal"],
+    type: ["SaaS", "Teacher portal"],
     outcome: "Turning children's storybooks into progress teachers can see.",
     tags: ["Product design", "EdTech", "Teacher platform"],
     color: "",
@@ -55,5 +59,18 @@ window.PROJECTS = [
     image: "images/tellora-teacher-dashboard.webp",
     alt: "The Tellora teacher dashboard: A greeting for Ms Smith, cards for classes 4B and 4A, a Pending Review panel with 5 books to review and a Review Now button, a table of assignments, and a side column with Recent Activity, Notifications and Quick Actions.",
     href: "tellora-teacher-portal.html"        // the finished case study
+  },
+  {
+    slug: "accessibility-audit-assistant",
+    title: "Accessibility Audit Assistant",
+    company: "",                               // no company, so no briefcase chip
+    tool: "Claude Code",                       // what it was built with: a chip with a tool icon
+    type: ["WCAG 2.2", "In testing"],
+    outcome: "Catching accessibility issues in designs before they're built.",
+    color: "#5B47F5",                          // the tool's own indigo
+    image: "images/accessibility-audit-assistant.webp",
+    alt: "The tool's demo, labelled Demo data: a Create account screen with three numbered markers, beside a list of 3 issues found. The first, Hint text is too light, is a confirmed failure at 2.6:1 where 4.5:1 is needed, with two suggested fixes.",
+    live: "https://accessibilityauditassistant.netlify.app/",
+    group: "ai"                                // shown under AI Projects, not Work
   }
 ];

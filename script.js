@@ -9,9 +9,6 @@
 
 const root = document.documentElement;
 
-function getSaved(key) {
-  try { return localStorage.getItem(key); } catch (e) { return null; }
-}
 function save(key, value) {
   try { localStorage.setItem(key, value); } catch (e) { /* ignore */ }
 }
@@ -60,33 +57,6 @@ const onScroll = () => header.classList.toggle("scrolled", scrollY > 8);
 addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
-// ---- Audience tabs: swap the hero headline (arrow keys supported) ----
-const tabs = [...document.querySelectorAll('[role="tab"]')];
-
-function selectTab(tab, focus) {
-  tabs.forEach((t) => {
-    const selected = t === tab;
-    t.setAttribute("aria-selected", selected);
-    t.tabIndex = selected ? 0 : -1;
-    document.getElementById(t.getAttribute("aria-controls")).hidden = !selected;
-  });
-  if (focus) tab.focus();
-  save("audience", tab.id);
-}
-tabs.forEach((tab, i) => {
-  tab.addEventListener("click", () => selectTab(tab, false));
-  tab.addEventListener("keydown", (e) => {
-    let next = null;
-    if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
-    if (e.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
-    if (e.key === "Home") next = tabs[0];
-    if (e.key === "End") next = tabs[tabs.length - 1];
-    if (next) { e.preventDefault(); selectTab(next, true); }
-  });
-});
-const savedTab = document.getElementById(getSaved("audience") || "");
-if (savedTab && tabs.includes(savedTab)) selectTab(savedTab, false);
-
 // ---- Case-study cards (data in content.js) ----
 const escapeHTML = (value) =>
   String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -105,9 +75,11 @@ const caseStudyHref = (project) =>
   project.href || `case-study.html?project=${encodeURIComponent(project.slug || "")}`;
 
 // Card: the project's name (H3), chips on the right (the company first, with
-// a briefcase, then the type of product), a one-line outcome and the mockup.
+// a briefcase, or what it was built with, with a tool icon, then the type of product), a one-line outcome and the mockup.
 // Tags are shown on the case-study page.
 // A locked card tells screen readers in its link; its cover image shows the lock.
+// A project with no case-study page yet (live in content.js) has a plain title;
+// its "Try the live tool" link covers the card and opens in a new tab.
 function projectCard(project, index) {
   const num = String(index + 1).padStart(2, "0");
   const shot = project.image
@@ -120,20 +92,23 @@ function projectCard(project, index) {
   card.setAttribute("aria-labelledby", `p${num}-title`);
   card.innerHTML = `
     <div class="project-head">
-      <h3 class="project-title" id="p${num}-title"><a class="stretched" href="${escapeHTML(caseStudyHref(project))}"${project.locked ? " data-locked" : ""}><span class="sr-only">View case study: </span>${escapeHTML(project.title)}${project.locked ? `<span class="sr-only"> (password protected)</span>` : ""}</a></h3>
-      <ul class="tags" aria-label="Company and type of product">
+      <h3 class="project-title" id="p${num}-title">${project.live ? escapeHTML(project.title) : `<a class="stretched" href="${escapeHTML(caseStudyHref(project))}"${project.locked ? " data-locked" : ""}><span class="sr-only">View case study: </span>${escapeHTML(project.title)}${project.locked ? `<span class="sr-only"> (password protected)</span>` : ""}</a>`}</h3>
+      <ul class="tags" aria-label="${project.company ? "Company and type of product" : "About this project"}">
         ${project.company ? `<li class="tag-company"><svg aria-hidden="true"><use href="#briefcase"/></svg><span class="sr-only">Company: </span>${escapeHTML(project.company)}</li>` : ""}
-        ${(project.type || []).map((t) => `<li>${escapeHTML(t)}</li>`).join("")}
+        ${project.tool ? `<li class="tag-company"><svg aria-hidden="true"><use href="#wrench"/></svg><span class="sr-only">Built with: </span>${escapeHTML(project.tool)}</li>` : ""}
+        ${(project.type || []).map((t) =>`<li>${escapeHTML(t)}</li>`).join("")}
       </ul>
     </div>
     ${project.outcome ? `<p class="project-outcome">${escapeHTML(project.outcome)}</p>` : ""}
+    ${project.live ? `<p class="project-live"><a class="stretched" href="${escapeHTML(project.live)}" target="_blank" rel="noopener">Try the live tool<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a><span class="project-soon">Case study coming soon</span></p>` : ""}
     <div class="project-shot${project.image ? " has-image" : ""}">${shot}</div>`;
   return card;
 }
 
 const projectList = document.getElementById("projects");
+const aiList = document.getElementById("ai-projects");
 if (projectList && Array.isArray(window.PROJECTS)) {
-  window.PROJECTS.forEach((project, i) => projectList.appendChild(projectCard(project, i)));
+  window.PROJECTS.forEach((project, i) => (project.group === "ai" && aiList ? aiList : projectList).appendChild(projectCard(project, i)));
 }
 
 // ---- Project highlight: the card in the middle of the screen lifts ----
@@ -152,12 +127,13 @@ if ("IntersectionObserver" in window && projects.length) {
   }, zone);
   projects.forEach((p) => projectObserver.observe(p));
 
-  // When the list leaves the middle of the screen, no card is highlighted
-  new IntersectionObserver((entries) => {
+  // When a list leaves the middle of the screen, none of its cards is highlighted
+  const listObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (!entry.isIntersecting) projects.forEach((p) => p.classList.remove("is-active"));
+      if (!entry.isIntersecting) entry.target.querySelectorAll(".project").forEach((p) => p.classList.remove("is-active"));
     });
-  }, zone).observe(projectList);
+  }, zone);
+  document.querySelectorAll(".projects").forEach((list) => listObserver.observe(list));
 }
 
 // ---- Case-study pages ----
@@ -204,7 +180,7 @@ if (caseStudy && Array.isArray(window.PROJECTS) && window.PROJECTS.length) {
     let nextIndex = -1;
     for (let step = 1; step < list.length; step++) {
       const i = (index + step) % list.length;
-      if (list[i].href || list[i].image) { nextIndex = i; break; }
+      if (!list[i].live && (list[i].href || list[i].image)) { nextIndex = i; break; }
     }
     const label = link.querySelector("[data-field='next-label']");
     const title = link.querySelector("[data-field='next-title']");
@@ -220,6 +196,109 @@ if (caseStudy && Array.isArray(window.PROJECTS) && window.PROJECTS.length) {
       title.textContent = "Back to all case studies";
     }
   });
+}
+
+// ---- Case-study contents (style.css: "Contents") ----
+// Built from the numbered sections (a .section-num above an <h2> with an id):
+// a list beside the text on laptops, a pill that opens the list on tablets and
+// phones. CSS shows one or the other. Both mark the section on screen
+// (aria-current="location") and show how far through the story you are.
+const tocSections = [...document.querySelectorAll(".case-section")]
+  .filter((s) => s.querySelector(":scope > .section-num") && s.querySelector(":scope > h2[id]"));
+if (tocSections.length >= 3) {
+  const tocItems = tocSections.map((s) => {
+    const h2 = s.querySelector(":scope > h2");
+    return { id: h2.id, title: h2.textContent.trim(), num: s.querySelector(":scope > .section-num").textContent.trim() };
+  });
+  const tocTotal = String(tocItems.length).padStart(2, "0");
+
+  const rail = document.createElement("nav");
+  rail.className = "case-rail";
+  rail.setAttribute("aria-label", "Case study sections");
+  rail.innerHTML = `
+    <p class="case-rail-label">On this page</p>
+    <ol>${tocItems.map((i) => `<li><a href="#${i.id}">${escapeHTML(i.title)}</a></li>`).join("")}</ol>`;
+
+  const pill = document.createElement("div");
+  pill.className = "case-pill";
+  pill.innerHTML = `
+    <nav class="case-pill-menu" id="case-pill-menu" aria-label="Case study sections" hidden>
+      <ol>${tocItems.map((i) => `<li><a href="#${i.id}"><span class="case-pill-num" aria-hidden="true">${escapeHTML(i.num)}</span>${escapeHTML(i.title)}</a></li>`).join("")}</ol>
+    </nav>
+    <button class="case-pill-btn" type="button" aria-expanded="false" aria-controls="case-pill-menu">
+      <span class="sr-only">Case study sections, now reading </span>
+      <span class="case-pill-count"></span><span class="case-pill-title"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+    </button>`;
+  tocSections[0].before(rail, pill);
+
+  const railList = rail.querySelector("ol");
+  const links = [...rail.querySelectorAll("a"), ...pill.querySelectorAll("a")];
+  const pillBtn = pill.querySelector("button");
+  const pillMenu = pill.querySelector("nav");
+  const pillCount = pill.querySelector(".case-pill-count");
+  const pillTitle = pill.querySelector(".case-pill-title");
+
+  // The pill's list closes on a choice, on Escape and on a click outside it
+  const setPillOpen = (open) => {
+    pillMenu.hidden = !open;
+    pillBtn.setAttribute("aria-expanded", open);
+  };
+  pillBtn.addEventListener("click", () => setPillOpen(pillMenu.hidden));
+  pillMenu.addEventListener("click", (e) => { if (e.target.closest("a")) setPillOpen(false); });
+  document.addEventListener("click", (e) => { if (!pill.contains(e.target)) setPillOpen(false); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !pillMenu.hidden) { setPillOpen(false); pillBtn.focus(); }
+  });
+
+  let currentIndex = null;
+  const updateContents = () => {
+    const line = innerHeight * 0.4;   // the section crossing this line is the current one
+    const tops = tocSections.map((s) => s.getBoundingClientRect().top);
+    const last = tocSections[tocSections.length - 1].getBoundingClientRect();
+    let index = -1;
+    tops.forEach((top, n) => { if (top <= line) index = n; });
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) index = tocSections.length - 1;   // the very end of the page
+
+    // Both appear when the story starts and leave when it ends
+    const on = tops[0] < innerHeight * 0.75 && last.bottom > innerHeight * 0.25;
+    rail.classList.toggle("is-on", on);
+    pill.classList.toggle("is-on", on);
+    if (!on) setPillOpen(false);
+
+    if (index !== currentIndex) {
+      currentIndex = index;
+      const href = index >= 0 ? `#${tocItems[index].id}` : null;
+      links.forEach((a) => (a.getAttribute("href") === href ? a.setAttribute("aria-current", "location") : a.removeAttribute("aria-current")));
+      const shown = tocItems[Math.max(index, 0)];
+      pillCount.textContent = `${shown.num}/${tocTotal}`;
+      pillTitle.textContent = shown.title;
+    }
+
+    // The pill's line: how far through the whole story
+    const start = tops[0] + scrollY - line;
+    const end = last.bottom + scrollY - innerHeight;
+    const progress = Math.min(1, Math.max(0, (scrollY - start) / Math.max(1, end - start)));
+    pillBtn.style.setProperty("--progress", `${(progress * 100).toFixed(1)}%`);
+
+    // The list's line: down to the current section, then through it as you read
+    if (index >= 0) {
+      const box = tocSections[index].getBoundingClientRect();
+      const through = Math.min(1, Math.max(0, (line - box.top) / Math.max(1, box.height)));
+      const item = railList.children[index];
+      railList.style.setProperty("--fill", `${(item.offsetTop + item.offsetHeight * through).toFixed(1)}px`);
+    } else {
+      railList.style.setProperty("--fill", "0px");
+    }
+  };
+  let contentsFrame = 0;
+  const queueContents = () => {
+    if (!contentsFrame) contentsFrame = requestAnimationFrame(() => { contentsFrame = 0; updateContents(); });
+  };
+  addEventListener("scroll", queueContents, { passive: true });
+  addEventListener("resize", queueContents);
+  if (document.fonts) document.fonts.ready.then(queueContents);
+  updateContents();
 }
 
 // ---- Password-protected case studies ----
@@ -314,6 +393,204 @@ if (projectList) {
       },
     });
   });
+}
+
+// ---- Motion: Framer-style (section 11 of style.css) ----
+// The hero headline rises word by word, sections fade up as they scroll in,
+// arrow circles follow the pointer and the header tucks away on the way down.
+// Nothing moves for "reduce motion". Runs after the Work cards are built.
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  root.classList.add("motion-on");
+
+  // Hero headline: every word in its own mask
+  const heroTitles = [...document.querySelectorAll(".hero h1")];
+  heroTitles.forEach((h1) => {
+    let n = 0;
+    h1.querySelectorAll(".line").forEach((line) => {
+      const words = line.textContent.trim().split(/\s+/);
+      line.textContent = "";
+      words.forEach((word, i) => {
+        const mask = document.createElement("span");
+        mask.className = "w";
+        const inner = document.createElement("span");
+        inner.textContent = word;
+        inner.style.setProperty("--w", n++);
+        mask.append(inner);
+        line.append(mask);
+        if (i < words.length - 1) line.append(" ");
+      });
+    });
+  });
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => requestAnimationFrame(() =>
+    heroTitles.forEach((h1) => h1.classList.add("is-in"))));  // Reveal on scroll; "stagger" makes siblings arrive one after another
+  const reveal = (selector, stagger) => document.querySelectorAll(selector).forEach((el) => {
+    el.setAttribute("data-reveal", "");
+    if (stagger) {
+      const siblings = [...el.parentElement.children].filter((c) => c.matches(selector));
+      el.style.setProperty("--i", siblings.indexOf(el) % 6);
+    }
+  });
+  // Home page
+  reveal(".hero-intro");
+  reveal(".section-head");
+  reveal(".section-intro");
+  reveal(".project");
+  reveal(".bento .tile", true);
+  reveal(".statement");
+  reveal(".xp");
+  reveal(".footer-top > *", true);
+  // Case-study pages
+  reveal(".case-hero > *", true);
+  reveal(".case-meta");
+  reveal(".case-cover");
+  reveal(".case-figure");
+  reveal(".cs-card, .cs-cell, .cs-stat", true);
+  reveal(".cs-panel, .case-decision, .case-quote, .case-flow, .persona-group, .next-case");
+
+  const revealed = document.querySelectorAll("[data-reveal]");
+  if ("IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        revealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    revealed.forEach((el) => revealObserver.observe(el));
+  } else {
+    revealed.forEach((el) => el.classList.add("is-in"));
+  }
+
+  // Arrow circles follow the pointer a little (magnetic), on mouse and trackpad only
+  if (matchMedia("(hover: hover)").matches) {
+    document.querySelectorAll(".circle-btn").forEach((btn) => {
+      const zone = btn.closest(".has-circle, .footer-email, .next-case") || btn;
+      zone.addEventListener("pointermove", (e) => {
+        const r = btn.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+        btn.style.translate = Math.hypot(dx, dy) > 180 ? "" : `${(dx * 0.3).toFixed(1)}px ${(dy * 0.3).toFixed(1)}px`;
+      });
+      zone.addEventListener("pointerleave", () => { btn.style.translate = ""; });
+    });
+  }
+
+  // The header tucks away going down and comes back going up. It stays while
+  // the menu is open, and comes back as soon as anything in it gets keyboard focus.
+  let lastY = scrollY;
+  addEventListener("scroll", () => {
+    const y = scrollY;
+    const keep = navLinks.classList.contains("open") || header.contains(document.activeElement);
+    if (keep || y <= 160 || y < lastY - 2) header.classList.remove("is-tucked");
+    else if (y > lastY + 2) header.classList.add("is-tucked");
+    lastY = y;
+  }, { passive: true });
+  header.addEventListener("focusin", () => header.classList.remove("is-tucked"));
+}
+
+// ---- The hero squiggle ----
+// A tangle that ends in one decision; a click or tap tidies it into a case study's straight line.
+// The hint is a tooltip, nothing permanent: it follows the cursor, and on a touch screen
+// it sits above the line until the first tap.
+const squiggle = document.querySelector(".squiggle");
+if (squiggle) {
+  const moving = root.classList.contains("motion-on");
+  const path = squiggle.querySelector(".squiggle-path");
+  const tip = squiggle.querySelector(".squiggle-tip");
+  const canHover = matchMedia("(hover: hover)").matches;
+  const PUNCHLINE = "How it looks in a case study";
+  const CLICK_HINT = "Click to tidy it up";
+  const smooth = (v) => { const n = Math.min(1, Math.max(0, v)); return n * n * (3 - 2 * n); };
+  // Rounds off any sharp corners, so it reads as one confident hand-drawn line
+  const soften = (list) => list.map((_, i) => {
+    const from = Math.max(0, i - 9), to = Math.min(list.length - 1, i + 9);
+    let sum = 0;
+    for (let j = from; j <= to; j++) sum += list[j];
+    return sum / (to - from + 1);
+  });
+  // A dense ball of loops above the baseline. It opens out, comes down as a wave and runs straight to the dot.
+  const draw = (calmness) => {
+    const wild = 1 - calmness;
+    const xs = [], ys = [];
+    for (let i = 0; i <= 1400; i++) {
+      const t = i / 1400;
+      const mess = Math.max(0, 1 - t / 0.76) * wild;
+      const turn = t * 2 * Math.PI * 17 + 0.8 * Math.sin(t * 19) + 2.6;
+      const across = 5 + wild * 98 + (449 - wild * 98) * Math.pow(t, 1 + wild * 0.62);
+      const lift = wild * 122 * (1 - smooth((t - 0.38) / 0.38));
+      xs.push(across + mess * (100 * Math.cos(turn) + 22 * Math.cos(2.37 * turn + 1) + 12 * Math.sin(t * 61)));
+      ys.push(244 - lift + mess * (104 * Math.sin(turn * 0.97 + 0.5) + 20 * Math.sin(1.71 * turn + 2) + 8 * Math.cos(t * 47)));
+    }
+    const sx = soften(soften(xs)), sy = soften(soften(ys));
+    path.setAttribute("d", sx.map((x, i) => `${i ? "L" : "M"}${x.toFixed(1)} ${sy[i].toFixed(1)}`).join(""));
+  };
+  draw(0);
+  // The dots on the neat line sit exactly above their labels
+  const placeTicks = () => {
+    const art = squiggle.querySelector("svg").getBoundingClientRect();
+    if (!art.width) return;
+    const ticks = squiggle.querySelectorAll(".squiggle-tick");
+    squiggle.querySelectorAll(".squiggle-labels .is-neat > span").forEach((label, i) => {
+      if (!ticks[i]) return;
+      const box = label.getBoundingClientRect();
+      ticks[i].setAttribute("cx", ((box.left + box.width / 2 - art.left) * 460 / art.width).toFixed(1));
+    });
+  };
+  addEventListener("resize", placeTicks);
+  placeTicks();
+  if (document.fonts) document.fonts.ready.then(placeTicks);
+
+  let calm = 0, goal = 0, frame = 0;
+  const step = () => {
+    calm += (goal - calm) * 0.085;
+    if (Math.abs(goal - calm) < 0.002) calm = goal;
+    draw(calm);
+    frame = calm === goal ? 0 : requestAnimationFrame(step);
+  };
+  const tidy = (on) => {
+    goal = on ? 1 : 0;
+    squiggle.classList.toggle("is-tidy", on);
+    squiggle.setAttribute("aria-pressed", on);
+    if (!moving) { calm = goal; draw(calm); }
+    else if (!frame) frame = requestAnimationFrame(step);
+  };
+
+  let tipTimer = 0;
+  const showTip = (text, fixed) => {
+    tip.textContent = text;
+    tip.classList.toggle("is-fixed", fixed);
+    tip.classList.add("is-on");
+  };
+  const hideTip = () => tip.classList.remove("is-on");
+  const reset = () => { tidy(false); hideTip(); };
+  const tipToCursor = (e) => {
+    const art = tip.parentElement.getBoundingClientRect();
+    const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 12) - art.left;
+    tip.style.setProperty("--x", `${Math.round(x)}px`);
+    tip.style.setProperty("--y", `${Math.round(e.clientY + 20 - art.top)}px`);
+  };
+  if (canHover) {
+    squiggle.addEventListener("pointerenter", (e) => { tipToCursor(e); showTip(CLICK_HINT, false); });
+    squiggle.addEventListener("pointermove", tipToCursor);
+    squiggle.addEventListener("pointerleave", reset);
+  } else {
+    tipTimer = setTimeout(() => showTip("Tap to tidy it up", true), moving ? 3400 : 300);   // after the line has drawn
+  }
+  squiggle.addEventListener("click", (e) => {
+    const on = goal === 0;
+    clearTimeout(tipTimer);
+    tidy(on);
+    if (canHover && e.detail > 0) showTip(on ? PUNCHLINE : CLICK_HINT, false);
+    else if (on) showTip(PUNCHLINE, true);
+    else hideTip();
+  });
+  squiggle.addEventListener("focus", () => {
+    if (!squiggle.matches(":focus-visible")) return;
+    clearTimeout(tipTimer);
+    showTip("Press Enter to tidy it up", true);
+  });
+  squiggle.addEventListener("blur", reset);
+  // Escape always dismisses the tooltip (WCAG 1.4.13)
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") reset(); });
 }
 
 // ---- Current year in the footer ----

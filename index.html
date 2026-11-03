@@ -8,9 +8,16 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Onest:wght@100..900&family=Reenie+Beanie&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
+  <script>
+    // A page transition can be skipped (a reload, a background tab). That's fine, so it isn't reported as an error.
+    ["pageswap", "pagereveal"].forEach((type) => addEventListener(type, (e) => {
+      const vt = e.viewTransition;
+      if (vt) [vt.ready, vt.finished, vt.updateCallbackDone].forEach((p) => p.catch(() => {}));
+    }));
+  </script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%234b3fd8'/><text x='50' y='66' font-size='44' text-anchor='middle' fill='white' font-family='Georgia'>RP</text></svg>">
 </head>
 <body>
@@ -22,6 +29,7 @@
     <!-- UI icons -->
     <symbol id="arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="briefcase" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></g></symbol>
+    <symbol id="wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></g></symbol>
 
     <!-- Tool logos (How I build). Notion, Claude & Miro from Simple Icons (simpleicons.org, CC0); Replit from replit.com -->
@@ -54,6 +62,7 @@
       <div class="nav-right">
         <ul class="nav-links" id="nav-links">
           <li><a href="#work">Work</a></li>
+          <li><a href="#ai-work">AI Projects</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="https://www.linkedin.com/in/rakshapatidar/" target="_blank" rel="noopener">LinkedIn<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
           <li><a href="mailto:ux.rakshapatidar@gmail.com">Mail<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens your email app)</span></a></li>
@@ -77,13 +86,9 @@
       </div>
 
       <div class="container">
-        <!-- Greeting + the two audiences: hiring managers (full-time) and founders (freelance) -->
+        <!-- EDIT: the line above the headline -->
         <div class="hero-intro">
-          <p class="h5"><span class="t-secondary">Hi! I'm</span> Raksha</p>
-          <div class="tabs" role="tablist" aria-label="Who is visiting?">
-            <button class="tab" role="tab" id="tab-hiring" aria-controls="panel-hiring" aria-selected="true">For hiring managers</button>
-            <button class="tab" role="tab" id="tab-founder" aria-controls="panel-founder" aria-selected="false" tabindex="-1">For founders</button>
-          </div>
+          <p class="hero-status"><span class="hero-status-dot" aria-hidden="true"></span>Open to roles in the UK &amp; UAE</p>
         </div>
 
         <!-- EDIT: headline colour rule (see style-guide.html):
@@ -91,14 +96,28 @@
              Each <span class="line"> is one phrase = one line.
              Keep each line to about 20 characters (like "A product designer")
              so it stays on one line on every screen, phones included. -->
-        <div class="hero-panels">
-          <div class="panel" role="tabpanel" id="panel-hiring" aria-labelledby="tab-hiring">
-            <h1><span class="line">A product designer</span> <span class="line">with a focus on</span> <span class="line t-accent">B2B and SaaS tools.</span></h1>
-          </div>
+        <h1><span class="line">A product designer</span> <span class="line">with a focus on</span> <span class="line t-accent">B2B and SaaS tools.</span></h1>
 
-          <div class="panel" role="tabpanel" id="panel-founder" aria-labelledby="tab-founder" hidden>
-            <h1><span class="line">I help founders</span> <span class="line">turn complex ideas</span> <span class="line t-accent">into clear products.</span></h1>
-          </div>
+        <!-- The squiggle: how a process really looks. A click or tap tidies it into a case study's neat line (script.js draws it).
+             EDIT: the words under the line are in .squiggle-labels; keep the aria-label in step with them. -->
+        <div class="hero-squiggle">
+          <button type="button" class="squiggle" aria-pressed="false" aria-label="why? assumptions chai break the decision: a tangled line, how my process really looks. Tidied up, it becomes Research Design Test Ship, how it looks in a case study.">
+            <span class="squiggle-art" aria-hidden="true">
+              <svg viewBox="0 34 460 216">
+                <defs><linearGradient id="squiggle-ink" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="460" y2="0"><stop offset="0.5" style="stop-color:var(--text-primary)"/><stop offset="1" style="stop-color:var(--accent)"/></linearGradient></defs>
+                <path class="squiggle-path" pathLength="1" d=""/>
+                <circle class="squiggle-tick" cx="5" cy="244" r="4"/>
+                <circle class="squiggle-tick" cx="153" cy="244" r="4"/>
+                <circle class="squiggle-tick" cx="307" cy="244" r="4"/>
+                <circle class="squiggle-dot" cx="454" cy="244" r="6"/>
+              </svg>
+              <span class="squiggle-tip"></span>
+            </span>
+            <span class="squiggle-labels" aria-hidden="true">
+              <span class="is-mess"><span>why?</span><span>assumptions</span><span>chai break</span><span>the decision</span></span>
+              <span class="is-neat"><span>Research</span><span>Design</span><span>Test</span><span>Ship</span></span>
+            </span>
+          </button>
         </div>
       </div>
     </section>
@@ -114,6 +133,19 @@
         <!-- The cards are built from the PROJECTS list in content.js. Edit them there. -->
         <div class="projects" id="projects"></div>
         <noscript><p class="muted">Turn on JavaScript to see the case studies.</p></noscript>
+      </div>
+    </section>
+
+    <!-- ===================== AI PROJECTS ===================== -->
+    <section class="section" id="ai-work" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="ai-title">AI Projects</h2>
+          <p class="h6">Designed and built with AI</p>
+        </div>
+
+        <!-- Built from content.js: the projects with group: "ai". -->
+        <div class="projects" id="ai-projects"></div>
       </div>
     </section>
 
@@ -174,7 +206,7 @@
     <section class="section" id="side-projects" aria-labelledby="side-title">
       <div class="container">
         <div class="section-head">
-          <h2 id="side-title">Side projects</h2>
+          <h2 id="side-title">Side Projects</h2>
           <p class="h6">Writing · Products · Code</p>
         </div>
         <p class="section-intro">Writing, tools and small products I make outside the day job, mostly to help other designers.</p>
@@ -255,6 +287,7 @@
         <nav aria-label="Footer">
           <ul class="footer-nav">
             <li><a href="#work">Work</a></li>
+            <li><a href="#ai-work">AI Projects</a></li>
             <li><a href="#about">About</a></li>
               <li><a href="https://www.linkedin.com/in/rakshapatidar/" target="_blank" rel="noopener">LinkedIn<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
             <li><a href="mailto:ux.rakshapatidar@gmail.com">Mail<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens your email app)</span></a></li>

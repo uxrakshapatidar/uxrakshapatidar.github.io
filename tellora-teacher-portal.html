@@ -8,9 +8,16 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Onest:wght@100..900&family=Reenie+Beanie&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
+  <script>
+    // A page transition can be skipped (a reload, a background tab). That's fine, so it isn't reported as an error.
+    ["pageswap", "pagereveal"].forEach((type) => addEventListener(type, (e) => {
+      const vt = e.viewTransition;
+      if (vt) [vt.ready, vt.finished, vt.updateCallbackDone].forEach((p) => p.catch(() => {}));
+    }));
+  </script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%234b3fd8'/><text x='50' y='66' font-size='44' text-anchor='middle' fill='white' font-family='Georgia'>RP</text></svg>">
 </head>
 <body>
@@ -60,6 +67,7 @@
       <div class="nav-right">
         <ul class="nav-links" id="nav-links">
           <li><a href="index.html#work">Work</a></li>
+          <li><a href="index.html#ai-work">AI Projects</a></li>
           <li><a href="index.html#about">About</a></li>
           <li><a href="https://www.linkedin.com/in/rakshapatidar/" target="_blank" rel="noopener">LinkedIn<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
           <li><a href="mailto:ux.rakshapatidar@gmail.com">Mail<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens your email app)</span></a></li>
@@ -507,6 +515,7 @@
         <nav aria-label="Footer">
           <ul class="footer-nav">
             <li><a href="index.html#work">Work</a></li>
+            <li><a href="index.html#ai-work">AI Projects</a></li>
             <li><a href="index.html#about">About</a></li>
             <li><a href="https://www.linkedin.com/in/rakshapatidar/" target="_blank" rel="noopener">LinkedIn<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
             <li><a href="mailto:ux.rakshapatidar@gmail.com">Mail<svg class="ext" aria-hidden="true"><use href="#arrow-up-right"/></svg><span class="sr-only"> (opens your email app)</span></a></li>

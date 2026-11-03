@@ -11,6 +11,7 @@
    8. Tablets — all mid-size-screen spacing in one place
    9. Phones — all small-screen spacing in one place
    10. Print / PDF — for saving the style guide as a PDF
+   11. Motion — Framer-style animations (off for "reduce motion")
    Change a token once and the whole site updates.
    ========================================================= */
 
@@ -49,6 +50,7 @@
   /* Text */
   --text-primary: #17161d;      /* headings, body, the key words of a headline */
   --text-secondary: #5d5a66;    /* supporting words, labels, meta */
+  --text-copy: #45424e;         /* running text on case studies: a step below the titles, still dark (9:1) */
   --text-on-accent: #ffffff;    /* text on an accent fill */
   --text-inverse: #f3f1ec;      /* text on the dark footer */
   --text-inverse-secondary: #aaa7b5;
@@ -61,6 +63,7 @@
   --border-inverse: #2f2d3a;
   --focus: #4b3fd8;
   --focus-inverse: #f3f1ec;
+  --status: #15803d;            /* the dot beside "Open to roles" */
 
   /* Elevation */
   --shadow-card: 0 18px 32px -18px rgb(23 22 29 / .35);
@@ -69,24 +72,31 @@
 }
 
 :root {
-  --text-logo: 1.625rem;      /* the "Raksha Patidar." logo only */
+  --text-logo: 2.375rem;      /* the "Raksha Patidar." logo only */
 
   /* ---- Font families ---- */
-  --font-display: "Instrument Serif", Georgia, serif;
-  --font-body: "Google Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-logo: "Reenie Beanie", cursive;
 
   /* ---- Type scale (rem only) ----
-     h1–h3 use the display serif, h4–h6 use Google Sans.
+     h1–h3 use Bricolage Grotesque (600, tight), h4–h6 and text use Onest.
      Need the look of a heading without being one? Use class="h1"…"h6". */
   --text-h1: clamp(2.75rem, 7.8vw, 6.5rem);   /* other H1s; the hero headline sizes itself to the hero (5b) */
   --text-h2: clamp(2rem, 4vw, 3.5rem);
-  --text-h3: clamp(1.75rem, 3vw, 2.5rem);
+  --text-h3: clamp(1.75rem, 2.5vw, 2rem);    /* 28–32px: project names, tile titles, the About statement, the footer email */
   --text-h4: 1.375rem;
   --text-h5: 1.125rem;
+  --text-lead: 1.25rem;       /* 20px: the line under a case-study title and the first paragraph of each section */
   --text-h6: 0.8125rem;       /* 13px labels */
   --text-body: 1.0625rem;     /* 17px running text */
-  --text-small: 0.9375rem;    /* 15px UI labels (nav, tabs) and case-study body text */
+  --text-small: 0.9375rem;    /* 15px UI labels (nav, the status chip) */
   --text-caption: 0.8125rem;  /* 13px: the smallest size on the site */
+
+  /* ---- Letter spacing ----
+     The display font tightens as it gets bigger (0.5px less 3.5% of the size):
+     about −0.01em at 22px, −0.02em at 40px, −0.03em at 80px. */
+  --tracking-display: calc(0.5px - 0.035em);
 
   /* ---- Spacing scale ---- */
   --space-4: 4px;
@@ -118,8 +128,8 @@
 @media (min-width: 1024px) { :root { --gutter: clamp(80px, 7.8vw, 112px); } }
 
 /* Tablets (600–1023px): section titles step up so they clearly outrank card
-   and tile titles (H2 36–40 vs H3 28, the same ×1.4 step as on laptops).
-   Every other size follows the desktop scale. */
+   and tile titles (H2 36–40 vs H3 28). Every other size follows the desktop
+   scale. */
 @media (min-width: 600px) and (max-width: 1023px) {
   :root {
     --text-h2: clamp(2.25rem, 5vw, 2.5rem);
@@ -130,14 +140,17 @@
 
 /* Phones (under 600px): the same type roles, in steps sized for a small screen
    (about ×1.25–1.4 between levels).
-   H1 40 · H2 28 · H3 22 · H4 20 · H5 17 · Body 16 · Small 14 · H6 & Caption 13 */
+   H1 36 · H2 28 · H3 22 · H4 20 · Lead 18 · H5 17 · Body 16 · Small 14 · H6 & Caption 13
+   (H1 is 36, not 40: Bricolage is a wide face, and at 40 a case-study title
+   needed 5–6 lines on a 375px phone) */
 @media (max-width: 599px) {
   :root {
-    --text-h1: 2.5rem;
+    --text-h1: 2.25rem;
     --text-h2: 1.75rem;
     --text-h3: 1.375rem;
     --text-h4: 1.25rem;
     --text-h5: 1.0625rem;
+    --text-lead: 1.125rem;
     --text-body: 1rem;
     --text-small: 0.875rem;
     --gap: 16px;              /* gap between cards = the side margin */
@@ -171,6 +184,7 @@
   --text-quote-secondary: #5d5a66;
   --text-primary: #f3f1ec;
   --text-secondary: #b6b0a9;
+  --text-copy: #d6d0c9;
   --text-on-accent: #17161d;
   --text-inverse-secondary: #b6b0a9;
   --accent: #a99fff;
@@ -196,7 +210,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: var(--text-body);
-  line-height: 1.6;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -211,49 +225,60 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 p, li, dd, figcaption { text-wrap: pretty; }
 h1, h2, h3 { text-wrap: balance; }
 
-/* ---- Headings: one definition per level, used everywhere ---- */
+/* ---- Headings: one definition per level, used everywhere ----
+   The same values on every screen size.
+   Line height: every title 1.2 (H1–H5, and the display-font paragraphs),
+   body text 1.5, labels in capitals 1.4. The home headline and the
+   case-study titles are the exception (1.0, see below).
+   Letter spacing: the display font tightens as it grows (--tracking-display),
+   the body font keeps its own spacing, labels in capitals +0.08em.
+   A label sits 8px above its heading (the footer's "Let's talk" line sits
+   16px above the email). */
 h1, h2, h3, h4, h5, h6 { margin: 0; }
 
 h1, .h1 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   font-size: var(--text-h1);
-  line-height: 1.02;
-  letter-spacing: -0.01em;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-display);
   text-transform: none;
 }
 h2, .h2 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   font-size: var(--text-h2);
-  line-height: 1.06;
-  letter-spacing: -0.01em;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-display);
   text-transform: none;
 }
 h3, .h3 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   font-size: var(--text-h3);
-  line-height: 1.15;
-  letter-spacing: -0.005em;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-display);
   text-transform: none;
 }
 h4, .h4 {
   font-family: var(--font-body);
   font-weight: 600;
   font-size: var(--text-h4);
-  line-height: 1.3;
-  letter-spacing: -0.01em;
+  line-height: 1.2;
+  letter-spacing: 0;
   text-transform: none;
 }
 h5, .h5 {
   font-family: var(--font-body);
   font-weight: 600;
   font-size: var(--text-h5);
-  line-height: 1.4;
+  line-height: 1.2;
   letter-spacing: 0;
   text-transform: none;
 }
+/* The one exception: the home headline and the case-study titles are set
+   tight, like a Framer hero (100% line height, −0.035em letter spacing) */
+.hero h1, .case-title { line-height: 1; letter-spacing: -0.035em; }
 h6, .h6 {
   font-family: var(--font-body);
   font-weight: 600;
@@ -322,7 +347,6 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 }
 .section-head:has(+ .section-intro) { margin-bottom: var(--space-24); }
 .section-intro {
-  max-width: 56ch;
   margin-bottom: var(--space-48);
   color: var(--text-secondary);
   font-size: var(--text-body);
@@ -383,8 +407,10 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); height: var(--header-h); }
 
 .brand { display: inline-flex; align-items: center; text-decoration: none; min-height: 44px; }
-.initials { font-family: var(--font-display); font-size: var(--text-logo); line-height: 1; }
+.initials { font-family: var(--font-logo); font-weight: 400; font-size: var(--text-logo); line-height: 1; white-space: nowrap; }
 .initials span { color: var(--accent); }
+/* The narrowest phones: a little smaller, so the logo and menu button share one line */
+@media (max-width: 359px) { :root { --text-logo: 2rem; } }
 
 .nav-right { display: flex; align-items: center; gap: var(--space-8); }
 
@@ -420,7 +446,8 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 :root[data-theme="dark"] .icon-moon { display: none; }
 
 .menu-btn { display: none; }
-@media (max-width: 720px) {
+/* Five links and the handwritten logo need about 860px, so the menu button takes over below that */
+@media (max-width: 860px) {
   .menu-btn { display: inline-grid; }
   .nav-links {
     display: none;
@@ -439,7 +466,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 }
 
 /* =========================================================
-   5b. HERO — greeting + audience tabs, then the headline
+   5b. HERO — the status chip, the headline and the squiggle
    Type hierarchy: H5 (greeting) → H1 (headline).
    The hero ends where its content ends, so the gap to the next section
    is the same --section-pad used between every section.
@@ -478,50 +505,78 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 
 .hero .container { position: relative; }
 
-.tabs {
-  display: inline-flex; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-4);
-  border-radius: 999px; background: var(--surface-sunken); border: 1px solid var(--border);
-}
-.tab {
-  min-height: 44px; padding: 0 20px; border-radius: 999px; border: 0;
-  background: transparent; color: var(--text-secondary);
-  font: 500 var(--text-small)/1 var(--font-body); cursor: pointer;
-  transition: background-color .2s, color .2s;
-}
-.tab:hover { color: var(--text-primary); }
-/* Selected tab: a solid primary pill, so the selected state stands out
-   ~15:1 against the track in both themes (WCAG 1.4.11) */
-.tab[aria-selected="true"] {
-  background: var(--text-primary); color: var(--surface-page);
-}
-
 /* One phrase per line. If a phrase is too long for a phone, it wraps
    within itself, balanced, so it never breaks mid-phrase into the next line. */
 .hero h1 { text-wrap: balance; }
 .hero h1 .line { display: block; }
 /* Hero headline size, tablets and up: as large as the hero allows.
-   - Width: the longest line (about 6.3em) fills ~95% of the text column.
-     15cqi = 15% of the hero's text column (the .container below).
+   - Width: the longest line (about 8.3–8.6em in Bricolage) stays inside the
+     text column. 9cqi = 9% of the hero's text column (the .container below).
    - Height: the whole hero stays inside the first screen: 30svh − 4rem.
-   The smaller of the two wins, between 44 and 80px, so the headline never
-   fills the whole hero: laptops and tablets 80px (~70px at 600px). Phones keep 40px.
+   The smaller of the two wins, between 40 and 76px, so the headline never
+   fills the whole hero: laptops 76px · tablets ~53–76px. Phones use the
+   phone H1 (36px).
    The first line is for older browsers; the second replaces it where supported. */
 .hero > .container { container-type: inline-size; }
 @media (min-width: 600px) {
   .hero h1 {
-    font-size: clamp(2.75rem, min(12vw, 30vh - 4rem), 5rem);
-    font-size: clamp(2.75rem, min(15cqi, 30svh - 4rem), 5rem);
+    font-size: clamp(2.5rem, min(6.5vw, 30vh - 4rem), 4.75rem);
+    font-size: clamp(2.5rem, min(9cqi, 30svh - 4rem), 4.75rem);
   }
 }
 
-/* Both headlines share one grid cell, so the area is always as tall as the
-   longer one and the page below never jumps when switching tabs.
-   The hidden one is invisible to everyone, including screen readers. */
-.hero-panels { display: grid; }
-.hero-panels > .panel { grid-area: 1 / 1; }
-.panel[hidden] { display: block; visibility: hidden; }
-.panel:not([hidden]) h1 { animation: rise .5s ease both; }
+.hero h1 { animation: rise .5s ease both; }
 @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* The line above the headline: a see-through chip with a green dot */
+.hero-status {
+  display: inline-flex; align-items: center; gap: var(--space-8);
+  padding: 6px 14px 6px 12px; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--text-primary) 18%, transparent);
+  background: color-mix(in srgb, var(--surface) 30%, transparent);
+  font-size: var(--text-small); font-weight: 500; line-height: 1.5; color: var(--text-primary);
+}
+.hero-status-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--status); }
+
+/* The squiggle. Laptops: beside the headline, ending on the right margin and centred on its
+   three lines; this width makes it about as tall as they are. Smaller screens: under it. */
+.hero-squiggle { margin-top: var(--space-24); max-width: 400px; }
+@media (min-width: 1180px) {
+  .hero > .container { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: var(--space-48); }
+  .hero-intro { grid-column: 1; }
+  .hero h1 { grid-column: 1; grid-row: 2; }
+  .hero-squiggle { grid-column: 2; grid-row: 2; align-self: center; justify-self: end; width: min(100%, 405px); max-width: none; margin: 0 0 2px; }
+}
+.squiggle { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; font: inherit; color: var(--text-primary); text-align: left; cursor: pointer; }
+.squiggle:focus-visible { outline: 2px solid var(--focus); outline-offset: 8px; border-radius: var(--radius-xs); }
+.squiggle-art { position: relative; display: block; }
+.squiggle svg { display: block; width: 100%; height: auto; overflow: visible; }
+.squiggle-path { fill: none; stroke: url(#squiggle-ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.squiggle-dot { fill: var(--accent); }
+.squiggle-tick { fill: var(--text-primary); opacity: 0; transition: opacity .35s; }
+.squiggle.is-tidy .squiggle-tick { opacity: 1; }
+/* One evenly spaced row of labels: four messy truths, or four neat steps */
+.squiggle-labels {
+  display: grid; margin-top: var(--space-12);
+  font-size: var(--text-caption); font-weight: 500; line-height: calc(var(--text-small) * 1.5); color: var(--text-secondary);
+}
+.squiggle-labels > span { grid-area: 1 / 1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 var(--space-8); transition: opacity .35s; }
+.squiggle-labels > span > span { white-space: nowrap; }
+.squiggle-labels > span > span:last-child { font-weight: 600; color: var(--text-primary); }
+.squiggle-labels .is-neat { opacity: 0; }
+.squiggle.is-tidy .squiggle-labels .is-mess { opacity: 0; }
+.squiggle.is-tidy .squiggle-labels .is-neat { opacity: 1; }
+/* The hint: a small tooltip at the cursor, or fixed above the line on touch screens and for the keyboard */
+.squiggle-tip {
+  position: absolute; z-index: 2; left: 0; top: 0; translate: var(--x, 0) var(--y, 0);
+  padding: 6px 10px; border-radius: var(--radius-xs); white-space: nowrap; pointer-events: none;
+  background: var(--text-primary); color: var(--surface-page); font: 500 var(--text-caption)/1.3 var(--font-body);
+  box-shadow: 0 10px 18px -10px rgb(23 22 29 / .5);
+  opacity: 0; transition: opacity .2s, translate .14s linear;
+}
+.squiggle-tip.is-on { opacity: 1; }
+.squiggle-tip.is-fixed { left: auto; top: auto; right: 0; bottom: 24px; translate: none; }
+.squiggle-tip.is-fixed::after { content: ""; position: absolute; right: 18px; bottom: -4px; width: 10px; height: 10px; rotate: 45deg; border-radius: 2px; background: inherit; }
 
 /* =========================================================
    5c. WORK — one card per project (built from content.js)
@@ -546,7 +601,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   position: relative;
   overflow: hidden;
   display: flex; flex-direction: column;
-  padding: var(--card-pad) var(--card-pad) 0;
+  padding: var(--card-pad) var(--card-pad) 0;   /* no bottom padding: the screenshot sits in the bottom-right corner */
   border-radius: var(--radius-lg);
   background-color: var(--tint, var(--surface-tint-1));
   background-image:
@@ -585,13 +640,31 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   margin-top: var(--space-8);
   color: var(--text-secondary);
 }
-/* Screenshot: identical on every card. Sits bottom-right and bleeds off the
-   right and bottom edges by the same amount (the card clips it). The top of
-   the mockup shows; the full image is on the case-study page. */
+/* A project with no case study yet: a link to the live tool (it covers the
+   card) and a dashed chip, the same "not yet" chip the case studies use */
+.project-live {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-8) var(--space-16);
+  margin-top: var(--space-16);
+}
+.project-live a {
+  display: inline-flex; align-items: center; gap: var(--space-4);
+  font-weight: 500;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px;
+}
+.project:hover .project-live a { text-decoration-thickness: 2px; }
+.project-soon {
+  padding: 3px 11px;
+  border: 1px dashed var(--border-strong); border-radius: 999px;
+  font-size: var(--text-caption); font-weight: 600; line-height: 1.5;
+  color: var(--text-primary);
+}
+/* Screenshot: identical on every card. It sits in the bottom-right corner and
+   runs to the card's right and bottom edges, and it is shown whole: its height
+   follows the image, so the image ends exactly at the card's edges and no part
+   of the mockup is cut off. */
 .project-shot {
   position: relative;
-  margin: var(--space-48) calc(-1 * var(--card-pad)) -24px clamp(0px, 11%, 140px);
-  height: clamp(260px, 42vw, 570px);
+  margin: var(--space-48) calc(-1 * var(--card-pad)) 0 clamp(0px, 11%, 140px);
   border-radius: var(--radius-xs) 0 0 0;
   border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent);
   border-right: 0; border-bottom: 0;
@@ -599,7 +672,8 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   overflow: hidden;
   box-shadow: var(--shadow-shot);
 }
-.project-shot img { width: 100%; height: auto; }   /* never stretched or scaled out of proportion */
+.project-shot img { display: block; width: 100%; height: auto; }   /* never cropped, stretched or scaled out of proportion */
+.project-shot:not(.has-image) { aspect-ratio: 3 / 2; }   /* the placeholder until a screenshot is added */
 .shot-placeholder {
   height: 100%;
   display: grid; place-content: center; justify-items: center; gap: var(--space-8);
@@ -616,7 +690,8 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
    ========================================================= */
 /* No row gap: the space between the statement and the table is set by .xp only */
 .about-grid { row-gap: 0; }
-.statement { grid-column: 1 / span 8; color: var(--text-secondary); }
+/* A paragraph set in the display font: the title line height (1.2) */
+.statement { grid-column: 1 / span 10; color: var(--text-secondary); }
 .statement strong { font-weight: inherit; color: var(--text-primary); }
 
 /* Experience: a real <table>, aligned to the same left edge as the section title */
@@ -639,7 +714,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 .xp tbody tr:last-child > * { border-bottom: 1px solid var(--border); }
 .xp tbody th {
   width: 34%;
-  font-size: var(--text-h5); font-weight: 600; line-height: 1.4;   /* the H5 style */
+  font-size: var(--text-h5); font-weight: 600; line-height: 1.2;   /* the H5 style */
   color: var(--text-primary);
 }
 .xp td { color: var(--text-secondary); }
@@ -690,6 +765,9 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
    with the same space above and below it (--fab-space) */
 .tile .circle-btn { position: absolute; right: var(--tile-pad); bottom: var(--fab-space); }
 .tile h3 a { text-decoration: none; }
+/* The label sits 8px above the title (the tile's 16px gap, less 8).
+   Experiments and Off-screen keep their title at the bottom of the tile. */
+:is(.tile-medium, .tile-stack, .tile-gumroad) > h3 { margin-top: calc(var(--space-8) - var(--space-16)); }
 
 /* Placement on the 12-column grid */
 .tile-medium  { grid-column: 1 / 7;  grid-row: 1 / 3; }
@@ -732,8 +810,9 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   margin-top: calc(var(--fab-space) - var(--space-16));      /* + the 16px tile gap */
   margin-bottom: calc(var(--fab-space) - var(--tile-pad));   /* into the bottom padding */
 }
-.articles a:hover .article-title { text-decoration: underline; text-underline-offset: 4px; }
-.article-title { font-weight: 500; text-wrap: wrap; }
+.articles a:hover .article-title { color: var(--text-primary); text-decoration: underline; text-underline-offset: 4px; }
+/* Article titles in the secondary colour, a step below the tile's title */
+.article-title { font-weight: 500; color: var(--text-secondary); text-wrap: wrap; transition: color .2s; }
 .article-arrow { width: 16px; height: 16px; flex: none; color: var(--text-secondary); transition: transform .2s; }
 .articles a:hover .article-arrow { transform: translate(2px, -2px); color: var(--accent); }
 
@@ -800,9 +879,9 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   box-shadow: var(--shadow-card);
   transition: transform .4s ease;
 }
-.product .glyph { font-family: var(--font-display); font-size: var(--text-h3); line-height: 1; }
+.product .glyph { font-family: var(--font-display); font-weight: 600; font-size: var(--text-h3); line-height: 1; letter-spacing: var(--tracking-display); }
 .product .name {
-  font-size: var(--text-caption); font-weight: 600; line-height: 1.3;
+  font-size: var(--text-caption); font-weight: 600; line-height: 1.2;
   hyphens: auto; overflow-wrap: break-word;
 }
 .product .price {
@@ -830,7 +909,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
    Names use the same list style as the Medium articles (Body, 500). */
 @media (max-width: 599px) {
   .products { grid-template-columns: 1fr; gap: var(--space-8); padding: 0; }
-  .product .name { font-size: var(--text-body); font-weight: 500; line-height: 1.6; }
+  .product .name { min-width: 0; font-size: var(--text-body); font-weight: 500; line-height: 1.5; }
   .product {
     flex-direction: row; align-items: center; gap: var(--space-16);
     aspect-ratio: auto; min-height: 60px; padding: var(--space-12) var(--space-16);
@@ -838,7 +917,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   }
   /* Glyph, name and price share one centre line in every row */
   .product .glyph { flex: none; width: 2.6em; font-size: var(--text-h4); }
-  .product .price { margin: 0 0 0 auto; align-self: center; }
+  .product .price { flex: none; margin: 0 0 0 auto; align-self: center; }
 }
 
 /* Experiments */
@@ -846,7 +925,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 .tile-vibe h3 { margin-top: auto; max-width: 8ch; }
 .code-glyph {
   position: absolute; top: var(--space-12); right: 20px;
-  font-family: var(--font-display); font-size: var(--text-h2); line-height: 1;
+  font-family: var(--font-display); font-weight: 600; font-size: var(--text-h2); line-height: 1; letter-spacing: var(--tracking-display);
   opacity: .25;
 }
 
@@ -875,7 +954,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 .site-footer .t-secondary { color: var(--text-inverse-secondary); }
 
 .footer-top { padding-block: var(--space-48) var(--space-64); }   /* 48px above the "Let's talk" line */
-.footer-eyebrow { color: var(--text-inverse); margin-bottom: var(--space-32); }
+.footer-eyebrow { color: var(--text-inverse); margin-bottom: var(--space-16); }   /* 16px above the email */
 
 .footer-email {
   display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-16) clamp(12px, 2vw, 28px);
@@ -902,11 +981,11 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   padding-block: var(--space-24);
 }
 .footer-nav { display: flex; flex-wrap: wrap; gap: 0 var(--space-32); }
-/* Footer links use the H6 label style (13px, 600, uppercase, +0.08em) */
+/* Footer links look like the menu links on phones: the H5 size (18px, phones
+   17), 500, sentence case, on every screen */
 .footer-nav a {
   display: inline-flex; align-items: center; gap: var(--space-4); min-height: 44px;
-  font-size: var(--text-h6); font-weight: 600; line-height: 1.4;
-  letter-spacing: 0.08em; text-transform: uppercase;
+  font-size: var(--text-h5); font-weight: 500; line-height: 1.2;
   text-decoration: none; text-underline-offset: 6px;
 }
 .footer-nav a:hover { text-decoration: underline; }
@@ -932,9 +1011,13 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
    ========================================================= */
 .case {
   padding-bottom: var(--section-pad);
-  /* Body text on case studies: 15px, the nav size (phones 14) */
-  font-size: var(--text-small);
-  line-height: 1.7;
+  /* The case-study type scale ("Story sections" below). Set here, so the
+     homepage keeps its own sizes. Tablets and phones: sections 8 and 9. */
+  --text-h2: 2.75rem;
+  --text-h3: 1.75rem;
+  --text-h4: 1.75rem;
+  --text-measure: 41.25rem; /* how wide a paragraph runs (660px): about 70 characters of lead, just under 80 of body text */
+  font-size: 1.125rem;
   /* The arrow used by every case-study diagram */
   --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 16'%3E%3Cpath d='M1 8h16M12 3l5 5-5 5' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
@@ -942,7 +1025,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 .back-link {
   display: inline-flex; align-items: center; gap: var(--space-8);
   min-height: 44px; margin-top: var(--space-32);
-  font-weight: 600; color: var(--text-secondary); text-decoration: none;
+  font-size: var(--text-small); font-weight: 500; color: var(--text-secondary); text-decoration: none;
 }
 .back-link:hover { color: var(--text-primary); text-decoration: underline; text-underline-offset: 4px; }
 .back-link svg { width: 18px; height: 18px; }
@@ -950,16 +1033,17 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 .case-hero { padding-top: var(--space-48); }
 /* A label line above the title, in grey like every label */
 .case-eyebrow {
-  font-size: var(--text-h6); font-weight: 600; line-height: 1.4;
-  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary);
+  font-size: var(--text-h6); font-weight: 500; line-height: 1.4;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary);
 }
 /* The page title uses the H1 display style, as in the home hero */
-/* Case-study titles: the H1 display style, a step smaller (40–80px) so a long
-   sentence-title doesn't overpower the page */
-.case-title { margin-top: var(--space-16); font-size: clamp(2.5rem, 6.4vw, 5rem); }
-/* The line under the title uses the Lead size (18px), so it supports the
-   title instead of competing with it */
-.case-lede { margin-top: var(--space-24); font-size: var(--text-h5); line-height: 1.6; color: var(--text-secondary); }
+/* Case-study titles: the hero's tight style (see the headings), smaller than
+   the home headline (36–64px) so a long sentence-title doesn't overpower the
+   page, and always larger than the section titles */
+.case-title { margin-top: var(--space-8); font-size: clamp(2.25rem, 1rem + 4vw, 4rem); }
+/* The line under the title: the Lead style (20px, phones 18), in the primary
+   colour, like the first paragraph of every section */
+.case-lede { max-width: var(--text-measure); margin-top: var(--space-24); font-size: var(--text-lead); color: var(--text-primary); }
 .case-hero .tags { margin-top: var(--space-24); }
 .case-hero .tags li { background: var(--surface-sunken); }
 
@@ -968,7 +1052,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   margin: var(--space-48) 0 0; padding-block: var(--space-24);
   border-block: 1px solid var(--border);
 }
-.case-meta dd { margin: var(--space-4) 0 0; font-weight: 600; }
+.case-meta dd { margin: var(--space-4) 0 0; font-size: 1rem; font-weight: 500; }
 
 /* Password dialog for a locked case study (script.js). It opens from the Work
    card, and on the published password page (site-tools/publish.ps1). */
@@ -1002,7 +1086,9 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 .lock-help { font-size: var(--text-small); color: var(--text-secondary); }
 .lock-help a { color: var(--text-primary); text-underline-offset: 3px; }
 
-/* Cover: the project's tint with the grid texture, screenshot frame inside */
+/* Cover: the project's tint with the grid texture. The screenshot frame sits
+   on the bottom edge, with the same space on the left, right and top, and is
+   shown whole (its height follows the image) */
 .case-cover {
   --grid-line: color-mix(in srgb, var(--text-primary) 7%, transparent);
   margin: var(--space-48) 0 0;
@@ -1016,7 +1102,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   overflow: hidden;
 }
 .case-cover-frame {
-  height: clamp(260px, 45vw, 560px);
+  height: clamp(260px, 45vw, 560px);   /* the empty slot until a screenshot is added */
   margin-bottom: -24px;
   border-radius: var(--radius-xs) var(--radius-xs) 0 0;
   border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent);
@@ -1025,39 +1111,61 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   overflow: hidden;
   box-shadow: var(--shadow-shot);
 }
-.case-cover-frame img { width: 100%; height: auto; }
+.case-cover-frame img { display: block; width: 100%; height: auto; }
 .case-cover-frame.has-image { height: auto; margin-bottom: 0; }
 
 /* Story sections -------------------------------------------------------
    Written for a hiring manager who skims. One system, used the same way on
    every case study.
-   TYPE: six sizes, all from the site scale
-   · Section titles: H2 in Instrument Serif. The serif is only used for the
-     page title and the section titles; everything else is Google Sans.
-   · Sub-headings and design decisions: class="h4" (22px, phones 20)
-   · Titles of cards, cells, points and personas: class="h5" (18px, phones 17)
-   · Lead, 18px: the line under the page title, the lesson, the feedback
-   · Body text: 15px, the nav size (phones 14), in the secondary colour
-   · Labels: class="h6" (13px capitals). Stat values: the H2 size
+   TYPE: a clear scale, each level a visible step from the next
+   (laptops · tablets · phones)
+   · Page title: H1 in Bricolage Grotesque, 64 · 47 · 36
+   · Section titles: H2 in Bricolage Grotesque, 44 · 36 · 28. The display font
+     is only used for the page title, the section titles and the Impact
+     statement; everything else is Onest.
+   · Sub-headings and design decisions: class="h4", 28 · 24 · 22
+   · Lead: the line under the page title and the first paragraph of each
+     section, 20 · 20 · 18
+   · Body text: 18 · 17 · 16, the lesson and the feedback too
+   · Titles of cards, cells, points and personas: class="h5", bold, 18 · 18 · 17
+   · Card and table text: 16 everywhere, one step below the body text
+   · Labels: class="h6", 13 capitals. Stat values: the H2 size
+   WEIGHT: 600 only for titles and bold words; labels, chips, table row names
+   and the project facts are 500, everything else 400.
+   TEXT COLOUR: three steps, so the eye finds titles first
+   · Primary (near black): titles, the lead, bold words, table row names
+   · Copy (dark grey, --text-copy): all other running text
+   · Secondary (grey): labels, section numbers, table headings and the
+     supporting words of the Impact statement
    COLOUR: all from the theme, each with one job
-   · Accent: numbers, icons, bullets, eyebrow labels, stat values
    · The project's tint (lilac): highlights and PrimeTrack itself
    · Butter: problems · Mint: results · Sunken grey: reflection and notes
    · Dark: what people said
-   ICONS: outline, 2px stroke, round ends, in the accent colour: 20px beside
-   a title, 24px inside a persona badge. Cards and tables have no icons.
-   Everything spans the full width of the page. */
-.case-section { padding-top: var(--section-pad); color: var(--text-secondary); }
+   ICONS: outline, 2px stroke, round ends: 20px beside a title, 24px inside a
+   persona badge. Cards and tables have no icons.
+   Components span the full width of the page; paragraphs stop at
+   --text-measure. */
+.case-section { padding-top: var(--section-pad); color: var(--text-copy); }
 .case-glance { padding-top: var(--space-64); }
-/* Headings, bold words and table row names stay in the primary colour */
 :where(.case-section) :where(h2, h3, h4, .h4, .h5, strong, th) { color: var(--text-primary); }
 .case-section strong { font-weight: 600; }
 .section-num { color: var(--text-secondary); }
+/* Labels: a little lighter and tighter than on the homepage, so the many small
+   labels here don't compete with the titles */
+.case .h6 { font-weight: 500; letter-spacing: 0.06em; }
+.case .tags li { font-weight: 500; }
+/* The lead: the first paragraph of a section */
+.case-section > h2 + p:not([class]) { font-size: var(--text-lead); color: var(--text-primary); }
+/* Running paragraphs and short lists stay readable */
+.case-section > p:not([class]), .case-decision > p:not([class]), .case-section > .cs-list { max-width: var(--text-measure); }
+/* Card and table text: one step below the body text */
+.case :is(.cs-card, .cs-cell, .cs-points li, .persona, .case-table, .flow, .flow-box, .flow-result, .cs-note) { font-size: 1rem; }
 
-/* Icons beside a title are black like the title; icons beside a grey
-   label or note are grey (see the result box, persona boxes and notes) */
+/* Icons beside a title are black like the title; icons beside text or a
+   grey label take that colour (notes, the result box, persona boxes) */
 .cs-icon { display: block; width: 20px; height: 20px; color: var(--text-primary); }
-.cs-note > .cs-icon, .flow-result .cs-icon { color: var(--text-secondary); }
+.cs-note > .cs-icon { color: var(--text-copy); }
+.flow-result .cs-icon { color: var(--text-secondary); }
 
 /* An icon beside the title, the text under the title (cells, points, notes) */
 .cs-cell, .cs-points li, .cs-note {
@@ -1187,11 +1295,11 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   display: inline-block; margin-top: var(--space-8);
   padding: 2px var(--space-12); border-radius: 999px;
   background: var(--surface-sunken); color: var(--text-primary);
-  font-size: var(--text-caption); font-weight: 600; line-height: 1.6;
+  font-size: var(--text-caption); font-weight: 500; line-height: 1.5;
 }
-/* The facts: a grey label (H6) above content in the primary colour */
+/* The facts: a grey label (H6) above content in the copy colour */
 .persona-body { grid-row: span 3; display: grid; grid-template-rows: subgrid; row-gap: var(--space-16); margin: 0; }
-.persona-body dd { margin: 0; color: var(--text-primary); }
+.persona-body dd { margin: 0; color: var(--text-copy); }
 .persona-uses { display: flex; flex-wrap: wrap; align-items: center; align-content: start; gap: var(--space-8) var(--space-12); }
 .persona-uses .tags li { background: var(--surface-sunken); }
 .persona-box {
@@ -1216,15 +1324,15 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary);
 }
 
-/* Impact as one outcome statement in the display serif (class="h3
+/* Impact as one outcome statement in the display font (class="h3
    cs-outcome"), the same pattern as the About statement on the home page:
    the key facts in <strong> show in black, the words around them in grey */
-.cs-outcome { color: var(--text-secondary); line-height: 1.25; text-wrap: balance; }
+.cs-outcome { color: var(--text-secondary); text-wrap: balance; }
 .case-section .cs-outcome strong { font-weight: inherit; color: var(--text-primary); }
 
 /* Impact as numbers (used by the case-study.html template): three quiet
    grey cards with the same padding, gap and text size
-   as every other card. The number is in the display serif at the
+   as every other card. The number is in the display font at the
    section-title size, with its label (body text, grey) under it; both are
    centred. */
 .cs-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
@@ -1239,8 +1347,8 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 }
 .cs-value {
   display: block;
-  font-family: var(--font-display); font-weight: 400;
-  font-size: var(--text-h2); line-height: 1; letter-spacing: -0.01em;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--text-h2); line-height: 1; letter-spacing: var(--tracking-display);
   color: var(--text-primary);
 }
 
@@ -1251,7 +1359,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   background: var(--tint, var(--surface-tint-1));
   color: var(--text-primary);
-  font-size: var(--text-h5); line-height: 1.55;
+  font-size: var(--text-h5);
 }
 
 /* Feedback: the inverse of the page (dark in light mode, cream in dark mode),
@@ -1262,9 +1370,9 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   background: var(--surface-quote);
   border: 1px solid var(--border-quote);
   color: var(--text-quote);
-  font-size: var(--text-h5); line-height: 1.55;
+  font-size: var(--text-h5);
 }
-.case-quote .h6 { margin-bottom: var(--space-12); color: var(--text-quote-secondary); }
+.case-quote .h6 { margin-bottom: var(--space-8); color: var(--text-quote-secondary); }
 
 /* Notes: a quiet box with an icon (how the results were measured, how I used AI) */
 .cs-note {
@@ -1285,10 +1393,10 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 .case-table :is(th, td):last-child { padding-right: 0; }
 .case-table thead th {
   padding-top: 0;
-  font-size: var(--text-h6); font-weight: 600; line-height: 1.4;
-  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary);
+  font-size: var(--text-h6); font-weight: 500; line-height: 1.4;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary);
 }
-.case-table tbody th { font-weight: 600; }
+.case-table tbody th { font-weight: 500; }
 
 /* Use cases: one per card. A label and title, then Before and After (48px
    apart), then one mint Result box. Steps are outlined boxes; the
@@ -1309,7 +1417,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   padding: var(--space-16) var(--space-24);
   border-radius: var(--radius-sm);
   background: var(--surface-tint-2);
-  color: var(--text-primary);
+  color: var(--text-copy);
 }
 .flow-result .h6 { display: flex; align-items: center; gap: var(--space-8); }
 .flow-result .cs-icon { width: 16px; height: 16px; }
@@ -1318,14 +1426,15 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   display: grid; place-content: center;
   min-height: 56px; padding: var(--space-12) var(--space-16);
   border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
-  background: var(--surface-page); color: var(--text-primary);
-  text-align: center; font-weight: 500; line-height: 1.4;
+  background: var(--surface-page); color: var(--text-copy);
+  text-align: center; line-height: 1.4;
   text-wrap: balance;   /* "Tech / fixes it", never "Tech fixes / it" */
 }
 .flow li.is-key, .flow-box.is-key {
   border: 2px solid var(--text-primary);
   background: var(--tint, var(--surface-tint-1));
-  font-weight: 600;
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
 /* Steps in a row, any number of them, each the same width.
@@ -1360,12 +1469,14 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 .case-steps li::before {
   content: counter(step, decimal-leading-zero);
   grid-row: span 2;
-  font-size: var(--text-h5); font-weight: 600; line-height: 1.4;
+  font-size: var(--text-h5); font-weight: 600; line-height: 1.2;
   color: var(--text-secondary);
 }
 
-/* Screenshots */
-.case-figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+/* Screenshots: always shown whole. The shapes below are only the empty slots
+   shown until an image is added; once it is, the image sets the frame's
+   height, so no screenshot is ever cropped on any side. */
+.case-figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: var(--gap); }
 .case-figure { margin: 0; }
 .case-figure .frame {
   aspect-ratio: 4 / 3;
@@ -1374,25 +1485,24 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   border: 1px solid var(--border);
   overflow: hidden;
 }
-.case-figure img { width: 100%; height: 100%; object-fit: cover; }
+.case-figure img { display: block; width: 100%; height: auto; }
 .case-figure figcaption { margin-top: var(--space-12); }
-/* A screen grid shaped like the product screenshots (6:5), showing each from the top */
+/* Empty slots shaped like the screenshots they wait for */
 .case-figures.is-screens .frame { aspect-ratio: 6 / 5; }
-/* PrimeTrack's screens are exported at 3:2, so its grid shows them whole */
 .case-figures.is-screens.is-3x2 .frame { aspect-ratio: 3 / 2; }
-/* A taller screen (exported about 9:10) shares a row with another one, so both show whole */
 .case-figures.is-screens .case-figure.is-tall .frame { aspect-ratio: 9 / 10; }
-.case-figures.is-screens img { object-position: top left; }
-/* One wide screenshot: a 16:9 slot until the image is added, then the
-   image sets the height, so it is never cropped */
 .case-figure.is-wide .frame { aspect-ratio: 16 / 9; }
+/* An image always wins over the slot shape (each selector outranks its slot rule) */
+.case-figure .frame:has(> img),
+.case-figures.is-screens .frame:has(> img),
+.case-figures.is-screens.is-3x2 .frame:has(> img),
+.case-figures.is-screens .case-figure.is-tall .frame:has(> img),
 .case-figure.is-wide .frame:has(> img) { aspect-ratio: auto; }
-.case-figure.is-wide img { height: auto; }
 
 /* One rhythm inside every section:
-   number → title 12 · title → content 24 · text → text 16 · around cards,
+   number → title 8 · title → content 16 · text → text 16 · around cards,
    cells, diagrams, screenshots and notes 32 · before a sub-section or a
-   panel 64 · sub-section → its content 24 · design decisions 64 + a rule + 64. */
+   panel 64 · sub-section → its content 16 · design decisions 64 + a rule + 64. */
 .case-section > * + * { margin-top: var(--space-16); }
 .case-section > * + :where(.cs-grid, .cs-cells, .cs-stats, .persona-group, .case-table, .case-flow, .case-figure, .case-figures, .case-callout, .case-quote, .cs-note, .case-steps),
 .case-section > :where(.cs-grid, .cs-cells, .cs-stats, .persona-group, .case-table, .case-flow, .case-figure, .case-figures, .case-callout, .case-quote, .cs-note, .case-steps, .cs-panel) + * {
@@ -1400,10 +1510,8 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 }
 .case-section > * + :where(h3, .cs-panel, .case-decision) { margin-top: var(--space-64); }
 .case-section > .persona-group + .persona-group { margin-top: var(--space-48); }
-.case-section > .section-num + h2 { margin-top: var(--space-12); }
-.case-section > h2 + * { margin-top: var(--space-24); }
-.case-glance > h2 + * { margin-top: var(--space-16); }
-.case-section > h3 + * { margin-top: var(--space-24); }
+.case-section > .section-num + h2 { margin-top: var(--space-8); }
+.case-section > :is(h2, h3) + * { margin-top: var(--space-16); }
 .case-section > h2 + .case-decision { margin-top: var(--space-48); }
 .case-section > .case-decision + .case-decision {
   margin-top: var(--space-64); padding-top: var(--space-64);
@@ -1440,6 +1548,92 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   }
   @keyframes read-progress { to { transform: scaleX(1); } }
 }
+
+/* Contents: built by script.js from the numbered sections, in one of two forms.
+   - Laptops: a plain list beside the text, in the left margin. A thin line
+     beside it fills as you read, and the section on screen is dark and bold.
+     On smaller laptops the story moves right a little to make room.
+   - Tablets and phones: a small pill at the bottom of the screen shows where
+     you are, with a progress line along its edge, and opens the full list.
+   Both appear when the story starts and leave when it ends. */
+.case-rail { display: none; }
+@media (min-width: 1100px) {
+  .case-rail {
+    display: block;
+    position: fixed; z-index: 80;
+    top: calc(var(--header-h) + var(--space-48));
+    left: max(var(--space-16), calc((100vw - var(--max-width)) / 2 + var(--gutter) - 198px));
+    width: 182px;
+    max-height: calc(100vh - var(--header-h) - var(--space-64));
+    overflow-y: auto; scrollbar-width: none;
+    padding: var(--space-8);   /* room for the focus ring inside the scrolling area */
+    transition: opacity .3s, translate .5s var(--ease-out);
+  }
+  /* Off the story it hides, but a keyboard user tabbing into it still sees it */
+  .case-rail:not(.is-on, :focus-within) { opacity: 0; pointer-events: none; translate: -8px 0; }
+  .case-body { margin-left: max(0px, calc(214px - (100vw - min(100vw, var(--max-width))) / 2 - var(--gutter))); }
+}
+.case-rail-label {
+  margin-bottom: var(--space-12);
+  font-size: var(--text-caption); font-weight: 500; line-height: 1.4; color: var(--text-secondary);
+}
+.case-rail ol { position: relative; display: grid; gap: 2px; padding-left: var(--space-12); }
+.case-rail ol::before, .case-rail ol::after {
+  content: ""; position: absolute; left: 0; top: 0; width: 2px; border-radius: 2px;
+}
+.case-rail ol::before { bottom: 0; background: var(--border); }
+.case-rail ol::after { height: var(--fill, 0px); background: var(--text-primary); }
+.case-rail a {
+  display: block; padding: 5px 0;
+  font-size: var(--text-caption); line-height: 1.35;
+  color: var(--text-secondary); text-decoration: none;
+}
+.case-rail a:hover { color: var(--text-primary); }
+.case-rail a[aria-current] { color: var(--text-primary); font-weight: 600; }
+
+.case-pill {
+  position: fixed; z-index: 85; left: 50%; bottom: var(--space-16);
+  width: max-content; max-width: calc(100vw - 2 * var(--space-16));
+  translate: -50% 0;
+  transition: opacity .3s, translate .5s var(--ease-out), visibility .3s;
+}
+.case-pill:not(.is-on) { translate: -50% var(--space-16); opacity: 0; visibility: hidden; }
+@media (min-width: 1100px) { .case-pill { display: none; } }
+.case-pill-btn {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; gap: var(--space-8);
+  max-width: 100%; min-height: 44px; padding: 0 var(--space-12) 0 var(--space-16);
+  font: 500 var(--text-small)/1.2 var(--font-body); color: var(--text-primary);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-strong); border-radius: 999px;
+  box-shadow: 0 16px 36px -16px rgb(23 22 29 / .35); cursor: pointer;
+}
+.case-pill-btn::after {   /* the progress line */
+  content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: var(--progress, 0%);
+  background: var(--text-primary);
+}
+.case-pill-count { font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+.case-pill-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.case-pill-btn svg { flex: none; width: 16px; height: 16px; transition: rotate .2s; }
+.case-pill-btn[aria-expanded="true"] svg { rotate: 180deg; }
+.case-pill-menu {
+  position: absolute; left: 50%; bottom: calc(100% + var(--space-8)); translate: -50% 0;
+  width: 280px; max-width: calc(100vw - 2 * var(--space-16)); max-height: min(70vh, 460px); overflow-y: auto;
+  padding: var(--space-8);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); box-shadow: var(--shadow-raised);
+}
+.case-pill-menu a {
+  display: flex; gap: var(--space-8); padding: 9px var(--space-12);
+  border-radius: 10px; color: var(--text-copy); text-decoration: none;
+  font-size: var(--text-small); line-height: 1.3;
+}
+.case-pill-num { font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+.case-pill-menu a:hover { background: var(--surface-sunken); color: var(--text-primary); }
+.case-pill-menu a[aria-current] { background: var(--surface-sunken); color: var(--text-primary); font-weight: 600; }
+/* A jump to a section, or a focused link, stays clear of the header and the pill */
+html:has(.case-rail) { scroll-padding-top: calc(var(--header-h) + var(--space-32)); scroll-padding-bottom: 80px; }
 
 /* Tablets and phones: three-card rows and persona cards stack, four-card
    rows become 2 × 2, cell panels become rows, and the steps and scenarios
@@ -1536,8 +1730,8 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
   .case-table tr > * + * { margin-top: var(--space-8); }
   .case-table td[data-label]::before {
     content: attr(data-label); display: block; margin-bottom: 2px;
-    font-size: var(--text-h6); font-weight: 600; line-height: 1.4;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary);
+    font-size: var(--text-h6); font-weight: 500; line-height: 1.4;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary);
   }
 
 }
@@ -1620,8 +1814,9 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
    ========================================================= */
 .sg { padding-bottom: var(--section-pad); }
 .sg-hero { padding-top: var(--space-48); }
-.sg-hero h1 { margin-top: var(--space-16); }
+.sg-hero h1 { margin-top: var(--space-8); }
 .sg-lede { margin-top: var(--space-24); max-width: 60ch; font-size: var(--text-h5); color: var(--text-secondary); }
+.sg-version { margin-top: var(--space-16); }
 
 .sg-toc { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-top: var(--space-32); }
 .sg-toc a {
@@ -1641,11 +1836,12 @@ code {
 }
 
 /* Typefaces */
-.sg-fonts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.sg-fonts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
 .sg-font { padding: clamp(24px, 3vw, 40px); border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); }
 .sg-specimen { font-size: var(--text-h1); line-height: 1; margin-bottom: var(--space-24); }
-.sg-specimen-serif { font-family: var(--font-display); }
-.sg-specimen-sans { font-family: var(--font-body); font-weight: 600; letter-spacing: -0.03em; }
+.sg-specimen-display { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.035em; }
+.sg-specimen-text { font-family: var(--font-body); font-weight: 600; }
+.sg-specimen-logo { font-family: var(--font-logo); }
 .sg-font h3 { margin-bottom: var(--space-4); }
 .sg-font p + p { margin-top: var(--space-8); }
 
@@ -1667,6 +1863,13 @@ code {
 .sg-specs dd { margin: 0; overflow-wrap: anywhere; }
 .sg-sample { overflow-wrap: anywhere; }
 
+/* Components: the real pieces, laid out as samples */
+.sg-tips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-16); }
+.sg-tips .squiggle-tip { position: relative; left: auto; top: auto; right: auto; bottom: auto; translate: none; opacity: 1; }
+.sg-squiggles { display: grid; gap: var(--space-32); max-width: 405px; }
+.sg-squiggles div.squiggle { cursor: default; }
+.sg-chips { display: grid; gap: var(--space-12); justify-items: start; padding: var(--space-24); border-radius: var(--radius-md); background: var(--surface-tint-1); }
+
 /* Headline colour rule */
 .sg-demo { padding: clamp(24px, 4vw, 48px); border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); }
 .sg-demo .line { display: block; }
@@ -1679,8 +1882,8 @@ code {
 .sg-dot-secondary { background: var(--text-secondary); }
 .sg-dot-accent { background: var(--accent); }
 
-/* Colour: light and dark palettes side by side */
-.sg-themes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+/* Colour: the palette */
+.sg-themes { display: grid; gap: var(--gap); }
 .sg-theme {
   padding: clamp(20px, 3vw, 40px);
   border-radius: var(--radius-lg);
@@ -1690,7 +1893,7 @@ code {
 .sg-theme > h3 { margin-bottom: var(--space-24); }
 .sg-group + .sg-group { margin-top: var(--space-32); }
 .sg-group h4 { margin-bottom: var(--space-12); }
-.sg-swatches { display: grid; gap: var(--space-12); }
+.sg-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: var(--space-12) var(--space-32); }
 .sg-swatch { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: var(--space-12); align-items: center; }
 .sg-chip { width: 44px; height: 44px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--text-primary) 18%, transparent); }
 .sg-swatch-name { display: block; font-size: var(--text-small); font-weight: 600; }
@@ -1704,6 +1907,10 @@ code {
 .sg-contrast th, .sg-contrast td { padding: var(--space-8) var(--space-8) var(--space-8) 0; border-top: 1px solid var(--border); text-align: left; vertical-align: top; }
 .sg-contrast th { font-weight: 500; }
 .sg-contrast .ratio { padding-right: 0; text-align: right; font-weight: 600; white-space: nowrap; }
+/* Version history: the contrast table's style, with fixed version and date columns */
+.sg-versions { max-width: 920px; }
+.sg-versions th:first-child { width: 6rem; font-weight: 600; }
+.sg-versions th:nth-child(2), .sg-versions td:nth-child(2) { width: 11rem; white-space: nowrap; }
 
 /* Spacing and shape */
 .sg-space { display: grid; gap: var(--space-12); }
@@ -1731,7 +1938,6 @@ code {
 .sg-a11y p:not(.h6) { color: var(--text-secondary); }
 
 @media (max-width: 960px) {
-  .sg-themes { grid-template-columns: 1fr; }
   .sg-type { grid-template-columns: 1fr; }
 }
 @media (max-width: 720px) {
@@ -1742,11 +1948,12 @@ code {
 /* =========================================================
    8. TABLETS (600–1023px) — one spacing system for mid-size screens
    Side margin 48–80 · between cards 24 · inside every card 32 ·
-   label → title 16 · title → content 16 · section title → content 48 ·
+   label → title 8 · title → content 16 · section title → content 48 ·
    between sections 80–102 (--section-pad). Type sizes: see the tablet tokens at the top.
    ========================================================= */
 @media (min-width: 600px) and (max-width: 1023px) {
-  .statement { line-height: 1.25; }   /* a multi-line paragraph */
+  /* Case studies: the tablet steps of their type scale */
+  .case { --text-h2: 2.25rem; --text-h3: 1.5rem; --text-h4: 1.5rem; font-size: 1.0625rem; }
 
   /* Work: the same padding and gap as the side-project tiles */
   .projects { gap: var(--gap); }
@@ -1774,14 +1981,8 @@ code {
    between sections 80 (--section-pad). Type sizes: see the phone tokens at the top.
    ========================================================= */
 @media (max-width: 599px) {
-  /* Display type gets a little more line height at small sizes */
-  h1, .h1 { line-height: 1.05; }
-  h2, .h2 { line-height: 1.1; }
-  h3, .h3 { line-height: 1.2; }
-  .statement { line-height: 1.3; }   /* a multi-line paragraph */
-
-  /* Hero tabs: a smaller pill (14px text, 36px tall; 24px is the WCAG minimum) */
-  .tab { min-height: 36px; padding: 0 14px; }
+  /* Case studies: the phone steps of their type scale */
+  .case { --text-h2: 1.75rem; --text-h3: 1.375rem; --text-h4: 1.375rem; font-size: 1rem; }
 
   /* Section heads: the label always sits under the title */
   .section-head {
@@ -1799,6 +2000,7 @@ code {
   .project-head { display: contents; }
   .project-outcome { order: 1; font-size: var(--text-small); }
   .project .tags { order: 2; margin-top: var(--space-16); }
+  .project-live { order: 3; }
   .project-shot { order: 3; }
 
   /* About */
@@ -1817,9 +2019,12 @@ code {
   /* Tool icons: a smaller gap, so the row of six stays as large as it can */
   .apps { --app-gap: var(--space-8); }
 
-  /* Footer: links in two even columns, so none ends up alone on a line */
+  /* Footer: the email (20px) and its arrow (40px) share one line, the links
+     use the body size, in two even columns so none ends up alone on a line */
   .footer-top { padding-bottom: var(--space-48); }
-  .footer-eyebrow { margin-bottom: var(--space-16); }
+  .footer-email .h3 { font-size: 1.25rem; }
+  .footer-email .circle-btn { width: 40px; height: 40px; }
+  .footer-nav a { font-size: var(--text-body); }
   .footer-nav { display: grid; grid-template-columns: repeat(2, max-content); column-gap: var(--space-32); }
   .footer-nav .footer-push { margin-left: 0; }
 
@@ -1847,8 +2052,140 @@ code {
   .sg-section { break-before: page; padding-top: 0; }
   /* Never split a row, card or swatch across two pages */
   .sg-type, .sg-font, .sg-demo, .sg-rule, .sg-swatch, .sg-project,
-  .sg-contrast tr, .sg-space li, .sg-radius, .sg-icons li, .sg-a11y li { break-inside: avoid; }
+  .sg-contrast tr, .sg-space li, .sg-radius, .sg-icons li, .sg-a11y li, .sg-versions tr { break-inside: avoid; }
   h2, h3, h4, .section-head, .sg-note { break-after: avoid; }
+  .back-link, .case-rail, .case-pill { display: none; }
+  /* The PDF shows the squiggle finished, never halfway through drawing itself */
+  .squiggle-path, .squiggle-dot, .squiggle-labels span { animation: none !important; }
+  .squiggle-path { stroke-dasharray: none !important; }
+  /* Use the whole page width, so pages are full rather than half empty:
+     type styles two by two (the H1 and the case-study roles across both
+     columns), the three headline rules side by side, swatches in three
+     columns, compact contrast rows, the spacing scale in two columns, and
+     the accessibility cards four in a row */
+  [data-reveal] { opacity: 1 !important; translate: none !important; filter: none !important; transition: none !important; }
+  .sg-note { max-width: none; margin-bottom: var(--space-12); font-size: var(--text-small); }
+  .sg-section .section-head { margin-bottom: var(--space-16); }
+  .sg-font { padding: var(--space-24); }
+  .sg-specimen { font-size: 3.5rem; margin-bottom: var(--space-16); }
+  .sg-font p:not(.sg-specimen) { font-size: var(--text-small); }
+  .sg-scale { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--space-32); margin-top: var(--space-24); }
+  .sg-type { grid-template-columns: 1fr; align-items: start; gap: var(--space-12); padding-block: var(--space-16); }
+  .sg-type h3 { margin-bottom: var(--space-8); }
+  .sg-specs { font-size: 0.75rem; line-height: 1.4; }
+  .sg-type.is-wide { grid-column: 1 / -1; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; }
+  .sg-type.is-stacked { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }   /* the long case-study list, its sample beside it */
+  .sg-rules { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* Colour: the swatches on one page, the project card and contrast table on the next */
+  .sg-theme { padding: 0; border: 0; }
+  .sg-theme > h3 { display: none; }   /* the section's label already says "Light mode" */
+  .sg-group:has(.sg-project) { break-before: page; margin-top: 0; }
+  .sg-theme .sg-contrast { margin-top: var(--space-16); font-size: var(--text-caption); }
+  .sg-group + .sg-group { margin-top: var(--space-12); }
+  .sg-group h4 { margin-bottom: var(--space-8); }
+  .sg-swatches { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4) var(--space-32); }
+  .sg-swatch { grid-template-columns: 32px minmax(0, 1fr) auto; gap: var(--space-8); }
+  .sg-chip { width: 32px; height: 32px; border-radius: var(--radius-xs); }
+  .sg-contrast th, .sg-contrast td { padding-block: 2px; }
+  #sg-spacing .sg-note { margin-bottom: var(--space-8); font-size: var(--text-caption); }
+  .sg-space { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4) var(--space-32); }
+  .sg-space li { grid-template-columns: 7rem minmax(0, 1fr); }
+  .sg-radii { margin-top: var(--space-16); }
+  .sg-radius { height: 64px; }
+  .sg-radii + .sg-note { margin-top: var(--space-16); }
+  .sg-squiggles { gap: var(--space-16); max-width: 360px; }
+  .sg-a11y { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sg-a11y li { padding: var(--space-16); font-size: var(--text-small); }
+  /* Motion is short: it follows the squiggle on the same page, its four cards in one row */
+  #sg-motion { break-before: auto; break-inside: avoid; padding-top: var(--space-32); }
+  #sg-motion .sg-a11y { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .sg-icons { break-inside: avoid; flex-wrap: nowrap; gap: var(--space-12); }   /* all icons in one row */
+  .sg-icons li { width: auto; flex: 1 1 0; }
+  /* Cover: the title block in the middle of the first page, the title at H1 size */
+  .sg-hero { display: flex; flex-direction: column; justify-content: center; min-height: 170mm; }
+  .sg-hero h1 { font-size: var(--text-h1); }
+}
+
+/* =========================================================
+   11. MOTION — Framer-style. script.js adds .motion-on (unless the visitor
+   asked for reduced motion), so without JavaScript nothing is hidden.
+   Pages slide into each other, the hero headline rises word by word,
+   sections fade up as they scroll in, arrow circles follow the pointer,
+   the header tucks away on the way down, and footer links draw their
+   underline. Screenshots are never moved or zoomed inside their frames,
+   so no mockup is ever cut.
+   ========================================================= */
+:root { --ease-out: cubic-bezier(.16, 1, .3, 1); }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Page to page: the old page lifts away, the new one rises in (Chrome, Edge) */
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) { animation: .35s var(--ease-out) both page-out; }
+  ::view-transition-new(root) { animation: .7s var(--ease-out) both page-in; }
+  @keyframes page-out { to { opacity: 0; transform: translateY(-16px); } }
+  @keyframes page-in { from { opacity: 0; transform: translateY(24px); } }
+
+  /* Reveal on scroll: rise, fade and come into focus, one after another */
+  .motion-on [data-reveal] {
+    opacity: 0; translate: 0 48px; filter: blur(10px);
+    transition: opacity 1.1s var(--ease-out), translate 1.1s var(--ease-out), filter 1.1s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+  .motion-on [data-reveal].is-in { opacity: 1; translate: none; filter: none; }
+  /* Cards and tiles keep their hover lift: it starts at once, only the
+     reveal waits its turn */
+  .motion-on :is(.project, .tile, .next-case)[data-reveal] {
+    transition: opacity 1.1s var(--ease-out), translate 1.1s var(--ease-out), filter 1.1s var(--ease-out),
+      transform .8s var(--ease-out), box-shadow .8s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 90ms), calc(var(--i, 0) * 90ms), calc(var(--i, 0) * 90ms), 0s, 0s;
+  }
+
+  /* Hero headline: each word rises out of its own mask. The mask reaches a
+     little past each word, so no letter is ever clipped. */
+  .motion-on .hero h1 { animation: none; }
+  .motion-on .hero h1 .w {
+    display: inline-block; overflow: clip; vertical-align: top;
+    padding: .06em .06em .16em; margin: -.06em -.06em -.16em;
+  }
+  .motion-on .hero h1 .w > span {
+    display: inline-block; translate: 0 110%; rotate: 4deg;
+    transition: translate 1.2s var(--ease-out), rotate 1.2s var(--ease-out);
+    transition-delay: calc(var(--w, 0) * 60ms + 120ms);
+  }
+  .motion-on .hero h1.is-in .w > span { translate: none; rotate: none; }
+
+  /* The squiggle draws itself once. The green dot pulses three times, then rests:
+     anything moving for longer than 5 seconds would need a pause button (WCAG 2.2.2). */
+  @keyframes squiggle-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes squiggle-pop { from { opacity: 0; scale: .96; } }
+  @keyframes squiggle-rise { from { opacity: 0; translate: 0 24px; filter: blur(8px); } }
+  @keyframes status-ping { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--status) 60%, transparent); } to { box-shadow: 0 0 0 9px transparent; } }
+  .motion-on .hero-status-dot { animation: status-ping 1.4s ease-out .5s 3; }
+  .motion-on .squiggle-path { stroke-dasharray: 1; animation: squiggle-draw 2.8s cubic-bezier(.45, .05, .4, 1) .3s backwards; }
+  .motion-on .squiggle-dot { animation: squiggle-pop .5s var(--ease-out) 3s backwards; transform-origin: 454px 244px; }
+  .motion-on .squiggle-labels .is-mess > span { animation: squiggle-rise .7s var(--ease-out) backwards; }
+  .motion-on .squiggle-labels .is-mess > span:nth-child(1) { animation-delay: .8s; }
+  .motion-on .squiggle-labels .is-mess > span:nth-child(2) { animation-delay: 1.5s; }
+  .motion-on .squiggle-labels .is-mess > span:nth-child(3) { animation-delay: 2.4s; }
+  .motion-on .squiggle-labels .is-mess > span:nth-child(4) { animation-delay: 3.1s; }
+
+  /* The header tucks away on the way down and comes back on the way up */
+  .motion-on .site-header { transition: translate .6s var(--ease-out), border-color .2s; }
+  .motion-on .site-header.is-tucked { translate: 0 -100%; }
+  /* A case study's side list rises with it, into the free space */
+  .motion-on .site-header.is-tucked ~ main .case-rail.is-on { translate: 0 calc(-1 * var(--header-h) - var(--space-16)); }
+
+  /* Arrow circles follow the pointer (magnetic) */
+  .motion-on .circle-btn { transition: translate .6s var(--ease-out), background-color .3s, color .3s, border-color .3s; }
+
+  /* Footer links and "Back" links draw their underline from the left, just
+     under the text */
+  .motion-on :is(.footer-nav a, .back-link) {
+    text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) 0 calc(50% + .7em) / 0 1px no-repeat;
+    transition: background-size .6s var(--ease-out);
+  }
+  .motion-on :is(.footer-nav a, .back-link):hover { background-size: 100% 1px; }
 }
 
 /* =========================================================
