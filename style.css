@@ -72,12 +72,11 @@
 }
 
 :root {
-  --text-logo: 2.375rem;      /* the "Raksha Patidar." logo only */
+  --text-logo: 1.625rem;      /* the "Raksha Patidar." logo only */
 
   /* ---- Font families ---- */
   --font-display: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-logo: "Reenie Beanie", cursive;
 
   /* ---- Type scale (rem only) ----
      h1–h3 use Bricolage Grotesque (600, tight), h4–h6 and text use Onest.
@@ -407,10 +406,8 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); height: var(--header-h); }
 
 .brand { display: inline-flex; align-items: center; text-decoration: none; min-height: 44px; }
-.initials { font-family: var(--font-logo); font-weight: 400; font-size: var(--text-logo); line-height: 1; white-space: nowrap; }
+.initials { font-family: var(--font-body); font-weight: 600; font-size: var(--text-logo); line-height: 1; letter-spacing: 0; white-space: nowrap; }
 .initials span { color: var(--accent); }
-/* The narrowest phones: a little smaller, so the logo and menu button share one line */
-@media (max-width: 359px) { :root { --text-logo: 2rem; } }
 
 .nav-right { display: flex; align-items: center; gap: var(--space-8); }
 
@@ -446,7 +443,7 @@ main > .section:last-of-type { padding-bottom: var(--section-pad); }
 :root[data-theme="dark"] .icon-moon { display: none; }
 
 .menu-btn { display: none; }
-/* Five links and the handwritten logo need about 860px, so the menu button takes over below that */
+/* Five links need a wide row, so the menu button takes over at 860px and below */
 @media (max-width: 860px) {
   .menu-btn { display: inline-grid; }
   .nav-links {
@@ -1836,12 +1833,11 @@ code {
 }
 
 /* Typefaces */
-.sg-fonts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
+.sg-fonts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
 .sg-font { padding: clamp(24px, 3vw, 40px); border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); }
 .sg-specimen { font-size: var(--text-h1); line-height: 1; margin-bottom: var(--space-24); }
 .sg-specimen-display { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.035em; }
 .sg-specimen-text { font-family: var(--font-body); font-weight: 600; }
-.sg-specimen-logo { font-family: var(--font-logo); }
 .sg-font h3 { margin-bottom: var(--space-4); }
 .sg-font p + p { margin-top: var(--space-8); }
 
